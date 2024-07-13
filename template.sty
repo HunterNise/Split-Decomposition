@@ -1,0 +1,947 @@
+\ProvidesPackage{template}
+
+% encoding
+
+\usepackage[T1]{fontenc}        % for output
+\usepackage[utf8]{inputenc}     % for input
+% --------------------------------------------------
+
+% language
+
+\usepackage{babel}
+%\usepackage{polyglossia}       % need XeTeX/LuaTeX
+
+%\usepackage{translations}
+%\usepackage{multilang}
+
+% TO DO: extend language support, see
+%   https://texfaq.org/FAQ-fixnam
+%   https://texfaq.org/FAQ-latexwords
+%   https://tex.stackexchange.com/questions/62308/rename-sections-with-ngerman
+%   https://tex.stackexchange.com/questions/380364/change-autoref-language)
+%   https://tex.stackexchange.com/questions/230497/change-name-of-algorithm
+% --------------------------------------------------
+
+% references
+
+%\usepackage{natbib}        % alternative to biblatex
+\usepackage[
+    backend = biber,
+    style   = alphabetic,
+    sorting = nyt
+]{biblatex}
+
+% show abstracts in bibliography (https://tex.stackexchange.com/a/559732)
+\newcommand*{\showabstract}{%
+    \renewbibmacro*{finentry}{%
+        \setunit{\finentrypunct\par}%
+        \usebibmacro{abstract}%
+        \finentry%
+    }%
+}
+% --------------------------------------------------
+
+% document control
+
+\usepackage{lipsum}     % dummy text
+\usepackage{layout}     % print layout
+\usepackage{calc}       % arithmetic
+\usepackage{ifthen}     % conditionals
+\usepackage{etoolbox}   % general purpose
+\usepackage{xpatch}     % extend etoolbox
+
+% switch command (https://tex.stackexchange.com/a/349350)
+\newboolean{default}
+\newcommand*{\case}{}
+\newcommand*{\default}{}
+\newenvironment*{switch}[1]{%
+    \setboolean{default}{true}%
+    \renewcommand{\case}[2]{%
+        \ifthenelse{\equal{#1}{##1}}%
+            {\setboolean{default}{false}##2}{}}%
+    \renewcommand{\default}[1]{%
+        \ifthenelse{\boolean{default}}{##1}{}}%
+}{}
+
+% fix page break links (https://tex.stackexchange.com/a/578405)
+\xpatchcmd{\@outputpage}
+    {\vfil\color@hbox}
+    {\vfil\pdfrunninglinkoff\color@hbox}{}{\fail}
+\xpatchcmd{\@outputpage}
+    {{\@thehead}\color@endbox}
+    {{\@thehead}\color@endbox\pdfrunninglinkon}{}{\fail}
+\xpatchcmd{\@outputpage}
+    {\footskip\color@hbox\normalcolor}
+    {\footskip\color@hbox\normalcolor\pdfrunninglinkoff}{}{\fail}
+\xpatchcmd{\@outputpage}
+    {{\@thefoot}\color@endbox}
+    {{\@thefoot}\pdfrunninglinkon\color@endbox}{}{\fail}
+
+% --------------------------------------------------
+
+% miscellanea
+
+\usepackage{mfirstuc}           % uppercase first letter
+\usepackage{tabto}              % tabs
+\usepackage{enumitem}           % lists
+\usepackage[svgnames]{xcolor}   % colors
+\usepackage{relsize}            % resize
+
+% get current font size (https://tex.stackexchange.com/a/409993)
+\newcommand*\fsize{\dimexpr\f@size pt\relax}
+
+% set date format to dd/mm/yyyy
+\usepackage{datetime2}
+\DTMsetdatestyle{ddmmyyyy}
+\DTMsetup{datesep=/, monthdaysep=/, yearmonthsep=/}
+\renewcommand{\today}{\DTMtoday}
+
+% set title page logical number to 0 (https://tex.stackexchange.com/a/27557)
+\patchcmd{\titlepage}
+    {\setcounter{page}\@ne}
+    {\setcounter{page}\z@}{}{}
+% BUG: for some reason \setcounter{page}{0} inside the titlepage environment doesn't work (https://tex.stackexchange.com/a/131583)
+
+% scare quotes (quotes for emphasis)
+% \squote = "..." ,  \squote* = '...'
+\NewDocumentCommand{\squote}{s m}
+    {\IfBooleanTF#1{`#2'}{``#2''}}
+
+\newcommand*{\bsp}{\mbox{}\ \ }
+\newcommand*{\Bsp}[1]{\mbox{}#1}
+\newcommand*{\Hrule}
+    {\vspace{\baselineskip} \hrule \vspace{\baselineskip}}
+% --------------------------------------------------
+
+
+% dimensions (paper size, margins, ...)
+
+\usepackage{geometry}
+
+% access geometry package variables with \geometryget{} (https://tex.stackexchange.com/a/670130)
+\usepackage{pgfkeys}
+\pgfkeyssetvalue{/geometry/lmargin}     {lmargin}
+\pgfkeyssetvalue{/geometry/left}        {lmargin}
+\pgfkeyssetvalue{/geometry/inner}       {lmargin}
+\pgfkeyssetvalue{/geometry/innermargin} {lmargin}
+\pgfkeyssetvalue{/geometry/rmargin}     {rmargin}
+\pgfkeyssetvalue{/geometry/right}       {rmargin}
+\pgfkeyssetvalue{/geometry/outer}       {rmargin}
+\pgfkeyssetvalue{/geometry/outermargin} {rmargin}
+\pgfkeyssetvalue{/geometry/tmargin}     {tmargin}
+\pgfkeyssetvalue{/geometry/top}         {tmargin}
+\pgfkeyssetvalue{/geometry/bmargin}     {bmargin}
+\pgfkeyssetvalue{/geometry/bottom}      {bmargin}
+\newcommand*{\geometryget}[1]
+   {\csname Gm@\pgfkeysvalueof{/geometry/#1}\endcsname}
+
+\geometry{
+    a4paper,
+    includehead, includefoot,
+    % 14font (17bls) -> 57,43,72,107
+    % 20font (25bls) -> 62,46,60,90
+    top     = (\baselineskip + 100pt) * 1/2,
+    bottom  = \geometryget{top} * 3/4,
+    left    = (-\baselineskip + 60pt) * 3/2,
+    right   = \geometryget{left} * \if@twoside 3/2 \else 1 \fi,
+    headheight  = \baselineskip * \real{1.2},
+    headsep     = \baselineskip * \real{1.42},
+    footskip    = \headsep * 5/4
+}
+% --------------------------------------------------
+
+% table of contents
+
+\usepackage[titles]{tocloft}
+
+% line dots (https://tex.stackexchange.com/a/53901)
+\renewcommand{\cftpartleader}{\cftdotfill{\cftdotsep}}
+\renewcommand{\cftchapleader}{\cftdotfill{\cftdotsep}}
+\renewcommand{\cftsecleader} {\cftdotfill{\cftdotsep}}
+
+% add 'Chapter' (https://tex.stackexchange.com/a/623604)
+% \renewcommand{\cftchappresnum}{Chapter }
+% \addtolength{\cftchapnumwidth}{5em}
+% \renewcommand{\cftchapaftersnum}{:}
+
+% TO DO:
+%   * prepend 'Part' to part number (with the previous snippet the link gets messed up)
+%       - https://tex.stackexchange.com/questions/38625/part-and-tocloft)
+%   * move up the landing on parts by toc links
+% --------------------------------------------------
+
+% sectioning commands
+
+% name variables
+% already defined: \partname, \chaptername, \appendixname, \abstractname, \contentsname, \indexname, \listfigurename, \listtablename, \bibname, \refname (https://texfaq.org/FAQ-fixnam)
+\newcommand*{\sectionname}
+    {\makefirstuc{\sectionautorefname}}
+\newcommand*{\subsectionname}
+    {\makefirstuc{\subsectionautorefname}}
+\newcommand*{\subsubsectionname}
+    {\makefirstuc{\subsubsectionautorefname}}
+\newcommand*{\paragraphname}
+    {\makefirstuc{\paragraphautorefname}}
+\newcommand*{\titlename}{}
+
+% access titles (https://tex.stackexchange.com/a/143003)
+\preto{\chapter}
+    {\def\leveltitle{\chaptertitle}}
+\preto{\section}
+    {\def\leveltitle{\sectiontitle}}
+\preto{\subsection}
+    {\def\leveltitle{\subsectiontitle}}
+\preto{\subsubsection}
+    {\def\leveltitle{\subsubsectiontitle}}
+
+\pretocmd{\@sect}
+    {\expandafter\gdef\leveltitle{#8}}{}{}
+\pretocmd{\@ssect}
+    {\expandafter\gdef\leveltitle{#5}}{}{}
+\pretocmd{\@chapter}
+    {\expandafter\gdef\leveltitle{#2}}{}{}
+\pretocmd{\@schapter}
+    {\expandafter\gdef\leveltitle{#1}}{}{}
+
+% custom chapter
+\newcommand*{\altchapter}[1]{%
+    \chapter*{#1}%
+    \addcontentsline{toc}{part}{#1}%
+    \markboth{\large\textsc{#1}}{}%
+}
+% --------------------------------------------------
+
+% page style (headers, footers)
+
+\usepackage{fancyhdr}
+\usepackage{emptypage}      % manage empty pages style
+\usepackage[fit]{truncate}  % for truncating titles
+%\usepackage{titlesec}      % more fancy titles
+
+
+% style commands
+% BUG: for some reason pagestyle doesn't work with switch (if you put the switch in the argument you get the csname errors)
+
+\newcommand*{\style}{}
+
+\preto{\frontmatter}{
+    \if@twoside
+        \ifthenelse{\equal{\style}{pagedown}}
+            {\pagestyle{twoside-pagedown-plain}}{}
+        \ifthenelse{\equal{\style}{pageup}}
+            {\pagestyle{twoside-pageup-plain}}{}
+        \ifthenelse{\equal{\style}{}}
+            {\pagestyle{empty}}{}
+    \else
+        \ifthenelse{\equal{\style}{short}}
+            {\pagestyle{oneside-plain}}{}
+        \ifthenelse{\equal{\style}{long}}
+            {\pagestyle{oneside-plain}}{}
+        \ifthenelse{\equal{\style}{long*}}
+            {\pagestyle{oneside-plain}}{}
+        \ifthenelse{\equal{\style}{}}
+            {\pagestyle{empty}}{}
+    \fi
+}{}{}
+
+\preto{\mainmatter}{
+    \renewcommand{\titlename}{\chaptername}
+    \if@twoside
+        \ifthenelse{\equal{\style}{pagedown}}
+            {\pagestyle{twoside-pagedown}}{}
+        \ifthenelse{\equal{\style}{pageup}}
+            {\pagestyle{twoside-pageup}}{}
+        \ifthenelse{\equal{\style}{}}
+            {\pagestyle{plain}}{}
+    \else
+        \ifthenelse{\equal{\style}{short}}
+            {\pagestyle{oneside-short}}{}
+        \ifthenelse{\equal{\style}{long}}
+            {\pagestyle{oneside-long}}{}
+        \ifthenelse{\equal{\style}{long*}}
+            {\pagestyle{oneside-long*}}{}
+        \ifthenelse{\equal{\style}{}}
+            {\pagestyle{plain}}{}
+    \fi
+}{}{}
+
+\preto{\appendix}{
+    \renewcommand{\titlename}{\appendixname}
+}{}{}
+
+% chapter page style
+\AtBeginDocument{
+    \if@twoside
+        \ifthenelse{\equal{\style}{pagedown}} {
+            \patchcmd{\chapter}
+                {\thispagestyle{plain}}
+                {\thispagestyle{twoside-pagedown-plain}}{}{}
+        }{}
+        \ifthenelse{\equal{\style}{pageup}} {
+            \patchcmd{\chapter}
+                {\thispagestyle{plain}}
+                {\thispagestyle{empty}}{}{}
+        }{}
+    \else
+        \patchcmd{\chapter}
+            {\thispagestyle{plain}}
+            {\thispagestyle{oneside-plain}}{}{}
+    \fi
+}
+
+% part page style
+\patchcmd{\part}
+    {\thispagestyle{plain}}
+    {\thispagestyle{empty}}{}{}
+
+% title page style
+\patchcmd{\maketitle}
+    {\thispagestyle{plain}}
+    {\thispagestyle{empty}}{}{}
+
+
+% oneside styles
+
+\fancypagestyle{oneside-plain}{
+    \renewcommand{\headrulewidth}{0pt}
+    \renewcommand{\footrulewidth}{0pt}
+    \fancyhf{}
+    \fancyfoot[C]{\thepage}
+}
+
+\fancypagestyle{oneside-short}{
+    \renewcommand{\chaptermark}[1]
+        {\markboth{\large\textsc{\titlename\ \thechapter}}{}}
+    \renewcommand{\sectionmark}[1]
+        {\markright{\large\textsc{\sectionname\ \thesection}}}
+    \renewcommand{\headrulewidth}{0.4pt}
+    \renewcommand{\footrulewidth}{0pt}
+    \fancyhf{}
+    \fancyhead[L]{\leftmark}
+    \fancyhead[R]{\rightmark}
+    \fancyfoot[C]{\thepage}
+}
+
+\fancypagestyle{oneside-long}{
+    \renewcommand{\chaptermark}[1]
+        {\markboth{\large\textsc{\titlename\ \thechapter}:\quad ##1}{}}
+    \renewcommand{\sectionmark}[1]
+        {\markright{\large\textsc{\ \sectionname\ \thesection}:\quad ##1}}
+    \renewcommand{\headrulewidth}{0.4pt}
+    \renewcommand{\footrulewidth}{0pt}
+    \fancyhf{}
+    \fancyhead[L]{\leftmark \\ \rightmark}
+    \fancyfoot[C]{\thepage}
+    \addtolength{\headheight}{\baselineskip}
+    \addtolength{\textheight}{-\baselineskip}
+}
+
+\fancypagestyle{oneside-long*}{
+    \renewcommand{\chaptermark}[1]
+        {\markboth{\large\textsc{\titlename\ \thechapter}:\quad ##1}{}}
+    \renewcommand{\sectionmark}[1]
+        {\markright{\large\textsc{\ \sectionname\ \thesection}:\quad ##1}}
+    \renewcommand{\headrulewidth}{0.4pt}
+    \renewcommand{\footrulewidth}{0pt}
+    \fancyhf{}
+    \fancyhead[L]{\leftmark}
+    \fancyfoot[C]{\thepage}
+}
+
+
+% twoside styles
+
+\if@twoside
+    \addtolength{\headwidth}{\geometryget{outer}/2}     % header in margin
+\fi
+
+\fancypagestyle{twoside-pagedown-plain}{
+    \renewcommand{\headrulewidth}{0pt}
+    \renewcommand{\footrulewidth}{0pt}
+    \fancyhf{}
+    \fancyfoot[EL]{\thepage}
+    \fancyfoot[OR]{\thepage}
+}
+\fancypagestyle{twoside-pagedown}{
+    \renewcommand{\chaptermark}[1]
+        {\markboth{\large\textsc{\titlename\ \thechapter}:\quad ##1}{}}
+    \renewcommand{\sectionmark}[1]
+        {\markright{\large\textsc{\sectionname\ \thesection}:\quad ##1}}
+    \renewcommand{\headrulewidth}{0.4pt}
+    \renewcommand{\footrulewidth}{0pt}
+    \fancyhf{}
+    \fancyhead[EL]{\leftmark}
+    \fancyhead[OR]{\rightmark}
+    \fancyfoot[EL]{\thepage}
+    \fancyfoot[OR]{\thepage}
+}
+
+\fancypagestyle{twoside-pageup-plain}{
+    \renewcommand{\headrulewidth}{0pt}
+    \renewcommand{\footrulewidth}{0pt}
+    \fancyhf{}
+    \fancyhead[EL]{\thepage}
+    \fancyhead[OR]{\thepage}
+}
+\fancypagestyle{twoside-pageup}{
+    \renewcommand{\chaptermark}[1]
+        {\markboth{\large\textsc{\titlename\ \thechapter}:\quad ##1}{}}
+    \renewcommand{\sectionmark}[1]
+        {\markright{\large\textsc{\sectionname\ \thesection}:\quad ##1}}
+    \renewcommand{\headrulewidth}{0.4pt}
+    \renewcommand{\footrulewidth}{0pt}
+    \fancyhf{}
+    \fancyhead[ER]{\leftmark}
+    \fancyhead[OL]{\rightmark}
+    \fancyhead[EL]{\thepage}
+    \fancyhead[OR]{\thepage}
+}
+% --------------------------------------------------
+
+% paragraph formatting
+
+\usepackage{ragged2e}           % text alignment
+\usepackage{parskip}            % paragraph spacing
+\usepackage{setspace}           % line spacing
+\usepackage{hanging}            % paragraph indentation
+\usepackage{changepage}         % multiple paragraph indentation
+\setlength{\parindent}{0pt}     % no line indentation
+\usepackage[none]{hyphenat}     % no hyphenation
+\sloppy                         % prevent overfull
+% --------------------------------------------------
+
+% footnotes
+
+\usepackage[bottom,hang]{footmisc}
+\usepackage{footnotebackref}            % back link
+
+\setlength{\footnotemargin}{0.75em}     % footnote indent
+\setlength{\footnotesep}{\baselineskip} % footnote spacing
+\renewcommand{\hangfootparskip}         % paragraph spacing
+    {0.25\baselineskip}
+
+% bigger font size
+\patchcmd{\H@@footnotetext}
+    {\footnotesize}
+    {\normalsize}{}{}
+\renewcommand{\footnotesize}{\small}
+% BUG: footmisc with hang messes up font size patch (it applies only to the number)
+
+% make rule full width (https://tex.stackexchange.com/a/21917)
+\renewcommand{\footnoterule}{%
+  \kern -3pt
+  \hrule width \textwidth height 0.1pt
+  \kern 2pt
+}
+
+% fix for \footnotetext (https://tex.stackexchange.com/a/78438)
+\LetLtxMacro{\BHFN@Old@footnotemark}{\@footnotemark}
+\renewcommand*{\@footnotemark}{%
+    \refstepcounter{BackrefHyperFootnoteCounter}%
+    \xdef\BackrefFootnoteTag{bhfn:\theBackrefHyperFootnoteCounter}%
+    \label{\BackrefFootnoteTag}%
+    \BHFN@Old@footnotemark
+}
+% --------------------------------------------------
+
+
+% mathematics
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{nccmath}        % extends amsmath
+\usepackage{mathtools}      % extends amsmath
+
+\usepackage{amsthm}
+%\usepackage{ntheorem}      % amsthm alternative
+\usepackage{thmtools}       % theorem formatting
+
+%\usepackage{mdframed}      % fancy frames
+%\usepackage{tcolorbox}     % even more fancy frames
+
+\usepackage{bm}             % bold symbols
+\usepackage{cancel}         % diagonal strikethrough
+\usepackage{xfrac}          % slanted fractions
+
+%\usepackage{mathcommand}   % different commands for text/math mode
+%\usepackage{knowledge}     % backref to definitions
+% --------------------------------------------------
+
+% symbols definitions
+
+\usepackage{marvosym}       % symbols (for \Lightning)
+
+\newcommand*{\N}{\mathbb{N}}
+\newcommand*{\Z}{\mathbb{Z}}
+\newcommand*{\Q}{\mathbb{Q}}
+\newcommand*{\R}{\mathbb{R}}
+\newcommand*{\C}{\mathbb{C}}
+
+\newcommand*{\card}[1]{\left\lvert#1\right\rvert}
+\newcommand*{\abs}[1]{\left\lvert#1\right\rvert}
+\newcommand*{\norm}[1]{\left\lVert#1\right\rVert}
+\newcommand*{\vspan}[1]{\left\langle#1\right\rangle}
+% TO DO: write delimitiers better (see mathtools)
+
+\newcommand*{\absurd}{\text{\large\Lightning}}
+
+% better looking emptyset symbol
+\renewcommand{\emptyset}{%
+    \mathchoice%
+        {\text{{\Large\o}}}%
+        {\text{{\Large\o}}}%
+        {\raisebox{-0.25ex}{\text{\large\o}}}%
+        {\raisebox{-0.1ex}{\text{\small\o}}}%
+}
+
+% restriction
+\newcommand*{\restr}[2]{%
+    #1\mspace{1mu}%
+    \mathchoice%
+        {\raisebox{-.4ex}{$\displaystyle|$}_{#2}}%
+        {\raisebox{-.4ex}{$\textstyle|$}_{#2}}%
+        {\raisebox{-.2ex}{$\scriptstyle|$}_{#2}}%
+        {\raisebox{-.2ex}{$\scriptscriptstyle|$}_{#2}}%
+}
+
+% := symbol (https://tex.stackexchange.com/a/4881)
+\newcommand*{\defeq}{%
+    \mathrel{\rlap{%
+        \raisebox{0.3ex}{$\m@th\cdot$}}%
+        \raisebox{-0.3ex}{$\m@th\cdot$}}=%
+}
+\newcommand*{\eqdef}{%
+    =\mathrel{\rlap{%
+        \raisebox{0.3ex}{$\m@th\cdot$}}%
+        \raisebox{-0.3ex}{$\m@th\cdot$}}%
+}
+
+% small under/overbrace (https://tex.stackexchange.com/a/224811, https://tex.stackexchange.com/a/419690)
+\newcommand*{\smallunderbrace}[1]{%
+    \mathop{\vtop{\m@th\ialign{##\crcr%
+    $\hfil\displaystyle{#1}\hfil$\crcr%
+    \noalign{\kern3\p@\nointerlineskip}%
+    \tiny\upbracefill\crcr%
+    \noalign{\kern3\p@}%
+    }}}\limits%
+}
+\newcommand*{\smalloverbrace}[1]{%
+    \mathop{\vbox{\m@th\ialign{##\crcr%
+    \noalign{\kern3\p@}%
+    \tiny\downbracefill\crcr%
+    \noalign{\kern3\p@\nointerlineskip}%
+    $\hfil\displaystyle{#1}\hfil$\crcr%
+    }}}\limits%
+}
+
+% variable size |
+\newcommand*{\pipe}[1][]
+    {\mspace{2mu plus 1mu minus 1mu}\raisebox{0.15ex}{#1|}\mspace{2mu plus 1mu minus 1mu}}
+
+% MnSymbols w/out pkg (https://tex.stackexchange.com/a/246205)
+\def\MnSymbolGlyphs#1{%         % print symbol tables, use this in preamble only to locate symbols (it loads the whole pkg)
+  \usepackage{MnSymbol,fonttable}%
+  \AtBeginDocument{\fonttable{MnSymbol#110}}%
+}
+\def\ImportFromMnSymbol#1{%     % import family
+    \DeclareFontFamily{U}{MnSymbol#1}{}
+    \DeclareFontShape{U}{MnSymbol#1}{m}{n}{
+        <-6>     MnSymbol#15
+        <6-7>    MnSymbol#16
+        <7-8>    MnSymbol#17
+        <8-9>    MnSymbol#18
+        <9-10>   MnSymbol#19
+        <10-12>  MnSymbol#110
+        <12->    MnSymbol#112}{}
+    \DeclareFontShape{U}{MnSymbol#1}{b}{n}{
+        <-6>     MnSymbol#1-Bold5
+        <6-7>    MnSymbol#1-Bold6
+        <7-8>    MnSymbol#1-Bold7
+        <8-9>    MnSymbol#1-Bold8
+        <9-10>   MnSymbol#1-Bold9
+        <10-12>  MnSymbol#1-Bold10
+        <12->    MnSymbol#1-Bold12}{}
+    \DeclareSymbolFont{MnSy#1}{U}{MnSymbol#1}{m}{n}
+}
+\newcommand*{\DeclareMnSymbol}[4]
+    {\DeclareMathSymbol{#1}{#2}{MnSy#3}{#4}}
+% --------------------------------------------------
+
+% equations spacing
+
+% \setlength{\lineskip}{4pt}
+% \setlength{\lineskiplimit}{\baselineskip}
+% \pretocmd{\align}{%
+%     \setlength{\lineskip}{\normallineskip}%
+%     \setlength{\lineskiplimit}{\normallineskiplimit}%
+% }{}{}
+% \pretocmd{\alignat}{%
+%     \setlength{\lineskip}{\normallineskip}%
+%     \setlength{\lineskiplimit}{\normallineskiplimit}%
+% }{}{}
+% \expandafter\pretocmd\csname align*\endcsname{%
+%     \setlength{\lineskip}{\normallineskip}%
+%     \setlength{\lineskiplimit}{\normallineskiplimit}%
+% }{}{}
+% \expandafter\pretocmd\csname alignat*\endcsname{%
+%     \setlength{\lineskip}{\normallineskip}%
+%     \setlength{\lineskiplimit}{\normallineskiplimit}%
+% }{}{}
+
+\AtBeginDocument{%
+    \setlength{\abovedisplayskip}{0.75\parskip}%
+    \setlength{\belowdisplayskip}{0.75\parskip}%
+}
+\newcommand*{\nospabv}{%
+    \setlength{\abovedisplayskip}{0pt}%
+    \setlength{\abovedisplayshortskip}{0pt}%
+}
+\newcommand*{\nospblw}{%
+    \setlength{\belowdisplayskip}{0pt}%
+    \setlength{\belowdisplayshortskip}{0pt}%
+}
+\newcommand*{\eqspace}[2]{%
+    \addtolength{\abovedisplayskip}{#1}%
+    \addtolength{\abovedisplayshortskip}{#1}%
+    \addtolength{\belowdisplayskip}{#2}%
+    \addtolength{\belowdisplayshortskip}{#2}%
+}
+\newcommand*{\equp}{%
+    \leavevmode%
+    \vspace{-\baselineskip}%
+    \vspace{-\abovedisplayskip}%
+}
+% --------------------------------------------------
+
+% structure commands
+
+% free 'proof' keyword from the amsthm definition (https://tex.stackexchange.com/a/8091, https://tex.stackexchange.com/a/35967)
+\expandafter\let\expandafter\amsproof\csname\string\proof\endcsname
+\let\amsendproof\endproof
+\let\proof\undefined
+% use 'amsproof' for the old proof environment
+
+% TO DO: too much hassle to make it work (needs \expandafter or smth)
+%   just copy paste the format you want in 'notebraces'
+\newcommand*{\brackets}[1]{%
+    \begin{switch}{#1}%
+        \case{Round}    {{\big(}{\big)}}%
+        \case{Square}   {{\big[}{\big]}}%
+        \case{Curly}    {{\big\{}{\big\}}}%
+        \case{Angle}    {{$\big\langle$}{$\big\rangle$}}%
+        \case{Ceil}     {{$\big\lceil$}{$\big\rceil$}}%
+        \case{Floor}    {{$\big\lfloor$}{$\big\rfloor$}}%
+        \case{Japanese} {{$\big\lceil$}{$\big\rfloor$}}%
+        \case{Group}    {{$\big\lgroup$}{$\big\rgroup$}}%
+        \case{Moustache}{{$\big\lmoustache$}{$\big\rmoustache$}}%
+        \case{Woustache}{{$\big\rmoustache$}{$\big\lmoustache$}}%
+        \default{default}%
+    \end{switch}%
+}
+% --------------------------------------------------
+
+% structure styles
+
+\newcommand*{\thmspace}{\baselineskip*2}
+\newcommand*{\thmindent}{3em}
+\newcommand*{\rmkindent}{6em}
+
+\declaretheoremstyle[
+    headformat   = \RaggedRight\NAME\ \NOTE\ ,
+    headfont     = \bfseries,
+    notefont     = \bfseries,
+    bodyfont     = \normalfont,
+    headpunct    = ,
+    notebraces   = {{\big(}{\big)}},
+    numbered     = no,
+    postheadhook = \leavevmode \begin{adjustwidth}{}{},
+    prefoothook  = \end{adjustwidth},
+    spaceabove   = \thmspace
+]{definition}
+
+\declaretheoremstyle[
+    headformat   = \RaggedRight\NAME\ \NUMBER\quad\NOTE\ ,
+    headfont     = \bfseries,
+    notefont     = \bfseries,
+    bodyfont     = \normalfont,
+    headpunct    = ,
+    notebraces   = {{\big(}{\big)}},
+    numbered     = yes,
+    parent       = chapter,
+    postheadhook = \leavevmode%
+                    \begin{adjustwidth}{\thmindent}{},
+    prefoothook  = \end{adjustwidth},
+    spaceabove   = \thmspace
+]{theorem}
+
+\declaretheoremstyle[
+    headformat   = \RaggedRight\NAME,
+    headfont     = \itshape,
+    headpunct    = ,
+    qed          = \qedsymbol,
+    numbered     = no,
+    postheadhook = \leavevmode%
+                    \begin{adjustwidth}{\thmindent}{},
+    prefoothook  = \end{adjustwidth}
+]{proof}
+
+\declaretheoremstyle[
+    headformat   = \RaggedRight\NAME,
+    headfont     = \bfseries,
+    headpunct    = ,
+    numbered     = no,
+    postheadhook = \leavevmode \vspace{-1.5\baselineskip}%
+                    \begin{adjustwidth}{\rmkindent}{},
+    prefoothook  = \end{adjustwidth},
+    spaceabove   = \thmspace
+]{remark}
+
+\declaretheoremstyle[
+    headformat   = \RaggedRight\!\!\NOTE,
+    notefont     = \bfseries,
+    headpunct    = ,
+    notebraces   = {{}{}},
+    numbered     = no,
+    postheadhook = \leavevmode \vspace{-1.5\baselineskip}%
+                    \begin{adjustwidth}{\rmkindent}{},
+    prefoothook  = \end{adjustwidth},
+]{remarklike}
+
+% NOTE: structure definitions are at the end
+% --------------------------------------------------
+
+
+% images & diagrams
+
+\usepackage{graphicx}
+\usepackage{rotating}
+
+% https://tex.stackexchange.com/a/246285
+\usepackage{caption}
+\newcommand*{\source}[1]{%
+    \captionsetup{justification=raggedleft}%
+    \caption*{Source: {#1}}%
+}
+\newcommand*{\credit}[1]{%
+    \captionsetup{justification=raggedleft}%
+    \caption*{Credit: {#1}}%
+}
+
+\usepackage{tikz}
+% --------------------------------------------------
+
+% code
+
+\usepackage{listings}
+\usepackage{minted}
+
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage[noEnd=true]{algpseudocodex}
+
+
+% algorithm commands
+
+\algdef{S}[PROCEDURE]{Procedure}[2]{%
+    \algpx@startCodeCommand\algpx@startIndent%
+    \algorithmicprocedure\ \textproc{#1}\,\ifstrempty{#2}{}{$\left(\text{#2}\right)$}%
+}
+\algdef{S}[FUNCTION]{Function}[2]{%
+    \algpx@startCodeCommand\algpx@startIndent%
+    \algorithmicfunction\ \textproc{#1}\,\ifstrempty{#2}{}{$\left(\text{#2}\right)$}%
+}
+\algrenewcommand{\Call}[2]
+    {\textproc{#1}\ifthenelse{\equal{#2}{}}{}{\left(#2\right)}}
+
+\algnewcommand{\algorithmicto}{\text{ to }}
+\algnewcommand{\To}{\algorithmicto}
+
+% suppress end lines locally
+\newcommand*{\noEnd}{%
+    \setbool{algpx@noEnd}{true}%
+    \algtext*{EndWhile}%
+    \algtext*{EndFor}%
+    \algtext*{EndLoop}%
+    \algtext*{EndIf}%
+    \algtext*{EndProcedure}%
+    \algtext*{EndFunction}%
+    \pretocmd{\EndWhile}    {\algpx@endIndent}{}{}%
+    \pretocmd{\EndFor}      {\algpx@endIndent}{}{}%
+    \pretocmd{\EndLoop}     {\algpx@endIndent}{}{}%
+    \pretocmd{\EndIf}       {\algpx@endIndent}{}{}%
+    \pretocmd{\EndProcedure}{\algpx@endIndent}{}{}%
+    \pretocmd{\EndFunction} {\algpx@endIndent}{}{}%
+    \pretocmd{\EndWhile}    {\algpx@endCodeCommand[1]}{}{}%
+    \pretocmd{\EndFor}      {\algpx@endCodeCommand[1]}{}{}%
+    \pretocmd{\EndLoop}     {\algpx@endCodeCommand[1]}{}{}%
+    \pretocmd{\EndIf}       {\algpx@endCodeCommand[1]}{}{}%
+    \pretocmd{\EndProcedure}{\algpx@endCodeCommand[1]}{}{}%
+    \pretocmd{\EndFunction} {\algpx@endCodeCommand[1]}{}{}%
+}
+
+% suppress indent lines locally
+\newcommand*{\noIndLines}
+    {\setbool{algpx@indLines}{false}}
+
+
+% algorithm styles
+
+% indent line
+\tikzset{algpxIndentLine/.style={gray,very thin,dashed}}
+
+% line number
+\algrenewcommand{\alglinenumber}[1]
+    {\small #1.}
+
+% caption
+\newcommand{\floatc@myruled}[2]
+    {{\@fs@cfont #1\,:}\ \ #2\par}
+
+\newcommand*{\fs@myruled}{%
+    \def\@fs@cfont{\bfseries}%
+    \let\@fs@capt\floatc@myruled%
+    \def\@fs@pre{\hrule height.8pt depth0pt \kern5pt}%
+    \def\@fs@mid{\kern5pt\hrule\kern5pt}%
+    \def\@fs@post{\kern2pt\hrule\relax}%
+    \let\@fs@iftopcapt\iftrue%
+}
+
+% colored label box (https://tex.stackexchange.com/a/690501)
+% \usepackage{caption}
+% \DeclareCaptionFormat{algo}{\colorbox{lightgray}{\parbox{\dimexpr\textwidth-2\fboxsep}{#1#2#3}}}
+% \captionsetup[algorithm]{format=algo}
+% \renewcommand{\fs@ruled}{%
+%     \def\@fs@cfont{\bfseries}%
+%     \let\@fs@capt\floatc@myruled%
+%     \def\@fs@pre{\hrule height.8pt depth0pt \kern2pt \vskip-2pt}%
+%     \def\@fs@mid{\vskip-2pt \kern2pt\hrule\kern2pt}%
+%     \def\@fs@post{\kern2pt\hrule\relax}%
+%     \let\@fs@iftopcapt\iftrue%
+% }
+% BUG: pkg caption messes up with styles
+
+\floatstyle{myruled}
+\restylefloat{algorithm}
+\floatstyle{plain}
+% --------------------------------------------------
+
+
+% !! load last !!
+
+% raise underscore in T1 encoding
+\renewcommand{\_}
+    {\raisebox{0.35ex}{\textunderscore}}
+    %{\rule{0.4em}{0.4pt}} % underscore in OT1 encoding
+
+% quotations
+\usepackage{csquotes}
+\usepackage{epigraph}
+
+% links
+\usepackage{hyperref}
+\usepackage{cleveref}       % better link management
+
+\hypersetup{
+    colorlinks          = true,     % colors instead of boxes
+    linkcolor           = blue,
+    urlcolor            = cyan,
+    citecolor           = LimeGreen,
+    linktoc             = all,
+    bookmarksnumbered   = true,
+    bookmarksopen       = true,
+    bookmarksopenlevel  = 0
+}
+\urlstyle{same}
+
+% capitalize autoref names
+\addto\extrasenglish{%
+    \renewcommand{\chapterautorefname}{Chapter}%
+    \renewcommand{\sectionautorefname}{Section}%
+    \renewcommand{\subsectionautorefname}{Subsection}%
+    \renewcommand{\subsubsectionautorefname}{Subsubsection}%
+}
+
+% structure definitions
+\declaretheorem[
+    title   = Definition,
+    style   = definition
+]{definition}
+\declaretheorem[
+    title   = Theorem,
+    style   = theorem
+]{theorem}
+\declaretheorem[
+    title   = Lemma,
+    style   = theorem,
+    sibling = theorem
+]{lemma}
+\declaretheorem[
+    title   = Corollary,
+    style   = theorem,
+    sibling = theorem
+]{corollary}
+\declaretheorem[
+    title   = Proposition,
+    style   = theorem,
+    sibling = theorem
+]{proposition}
+\declaretheorem[
+    title   = Proof,
+    style   = proof
+]{proof}
+\declaretheorem[
+    title   = Remark,
+    style   = remark
+]{remark}
+\declaretheorem[
+    title   = Note,
+    style   = remark
+]{note}
+\declaretheorem[
+    title   = Fact,
+    style   = remark
+]{fact}
+\declaretheorem[
+    title   = Claim,
+    style   = remark
+]{claim}
+\declaretheorem[
+    title   = Notation,
+    style   = remark
+]{notation}
+\declaretheorem[
+    style   = remarklike
+]{remarklike}
+% --------------------------------------------------
+
+% TO DO
+
+% better equation alignment in list
+% 	- https://tex.stackexchange.com/questions/29119/sharing-alignment-between-equations-in-two-different-items/29120#29120
+
+% better math typesetting
+%   * intelligent space around inline equations (not \mathsurround)
+%   * space between function and arguments (1/2mu)
+
+% change math font
+%   - https://ctan.org/pkg/free-math-font-survey
+%   - https://tex.stackexchange.com/questions/58098/what-are-all-the-font-styles-i-can-use-in-math-mode
+%   - mathalpha pkg
+
+% make a command to pass indent amount for remarklike structures
+
+% decent bar/overline/closure operator
+%   - https://tex.stackexchange.com/questions/22100/the-bar-and-overline-commands
+
+% better piecewise brace than cases
+
+% thicker and longer endash (using \textbf breaks pp. in bibtex)
+
+% hangindent in item lists
+
+% automatic line breaking with inline math (seems very hard)
+% automatic nice page breaking (seems VERY hard)
+
+% make algorithm styles
+%   - https://tex.stackexchange.com/questions/239655/algorithm-environment-defining-a-custom-style
+%   - https://tex.stackexchange.com/questions/690500/algorithm-caption-color-background

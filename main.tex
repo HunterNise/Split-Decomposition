@@ -1,0 +1,106 @@
+\documentclass[english, 14pt, oneside]{extbook}
+\usepackage{template}
+\input{chapters/preamble}
+
+\graphicspath{ {./images/} }
+\DeclareGraphicsExtensions{.png,.pdf,.eps}
+\addbibresource{references.bib}
+
+\usepackage{subfiles}
+
+\title{Split decomposition}
+\author{Alessandro Moretti}
+\date{\today}
+
+\renewcommand{\style}{long*}
+
+% set true if the title page is also the cover
+\newboolean{cover}
+\setbool{cover}{true}
+
+%\RaggedRight       % comment if you want justified text
+
+
+\begin{document}
+
+\input{chapters/frnt}
+
+
+\frontmatter
+
+% \chapter*{Abstract}
+
+% \chapter*{Dedication}
+
+% \chapter*{Acknowledgements}
+
+\cleardoublepage
+\currentpdfbookmark{Contents}{toc}
+\tableofcontents
+
+
+\mainmatter
+
+\subfileinclude{chapters/intro}
+
+% \part{An overview of methods}
+
+\part{Theory}
+\subfileinclude{chapters/p2c1}
+\subfileinclude{chapters/p2c2}
+\subfileinclude{chapters/p2c3}
+\subfileinclude{chapters/p2c4}
+
+\part{Method}
+\subfileinclude{chapters/p3c1}
+\subfileinclude{chapters/p3c2}
+
+\subfileinclude{chapters/concl}
+
+
+\appendix
+
+\cleardoublepage
+\phantomsection
+\addcontentsline{toc}{part}{Appendices}
+
+\subfile{chapters/a1}
+
+
+\backmatter
+
+\altchapter{Bibliography}
+\justifying
+
+%\showabstract
+\nocite{*}
+
+\printbibliography[
+    keyword = {main},
+    heading = none
+]\clearpage
+
+\section*{Books}
+\printbibliography[
+    notkeyword  = {main},
+    type        = book,
+    heading = none
+]\clearpage
+
+\section*{Related Articles}
+\printbibliography[
+    notkeyword  = {main},
+    notkeyword  = {other},
+    filter      = papers,
+    heading = none
+]\clearpage
+
+\section*{Other Articles}
+\printbibliography[
+    notkeyword  = {main},
+    keyword     = {other},
+    type        = article,
+    heading = none
+]
+
+\end{document}
