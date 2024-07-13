@@ -1,0 +1,518 @@
+\documentclass[./main.tex]{subfiles}
+\begin{document}
+\ifSubfilesClassLoaded{\mainmatter}{}
+
+\chapter{Total decomposability} \label{chap:p2c4}
+
+\begin{definition}[total decomposability]
+    A symmetric function $\, d : \XX \to \R \,$ is \textbf{totally decomposable} \\
+    \bsp if its split-prime residue is zero $\, d_0 = 0 \,$;
+    
+    or equivalently, if it can be written as
+    \[ d = \sum_{S \,\in\, \Sc_d(X)} \alpha_S^d \cdot \delta_S \]
+\end{definition} \bigskip
+
+\begin{remark}
+    A totally decomposable function is a pseudo-metric.
+    
+    In fact, it is a conical combination of split metrics \\
+    \bsp (which are pseudo-metrics).
+\end{remark}
+
+\begin{remark}
+    We have already seen in \autoref{chap:p2c1} that in the cases $n = 2,3$ \\
+    \bsp all the pseudo-metrics are totally decomposable \\
+    (observe that \textit{a posteriori} the coefficients found are exactly \\
+    \bsp the isolation indices of the corresponding split metric).
+
+    We now prove that this holds also for $n = 4$, \\
+    \bsp but not for $n \geq 5$.
+\end{remark}
+
+\clearpage
+
+\begin{lemma} \label{lemma:deqapa}
+    Suppose $d$ is a pseudo-metric on $X = \{t,u,v,w\}$ and
+    \[ \alpha_{\{t,u\},\{v,w\}} = \alpha_{\{t,v\},\{u,w\}} = \alpha_{\{t,w\},\{u,v\}} = 0 \]
+    
+    Then, for every $\, x,y \in X$
+    \[ d(x,y) = \alpha_{\{x\}, X \setminus \{x\}} + \alpha_{\{y\}, X \setminus \{y\}} \]
+\end{lemma}
+\begin{proof}
+    We can assume WLOG that $x = t$ and $y = u$. \bigskip
+
+    From \autoref{prop:aeqb} we have
+    \begin{alignat*}{2}
+        &\alpha_{\{t,u\},\{v,w\}} &&= \frac{1}{2}\, \Bigl( \max {\{ tv + uw,\, tw + uv,\, tu + vw \}} - tu - vw \Bigr) \\[2pt]
+        &\alpha_{\{t,v\},\{u,w\}} &&= \frac{1}{2}\, \Bigl( \max {\{ tu + vw,\, tw + uv,\, tv + uw \}} - tv - uw \Bigr) \\[2pt]
+        &\alpha_{\{t,w\},\{u,v\}} &&= \frac{1}{2}\, \Bigl( \max {\{ tu + vw,\, tv + uw,\, tw + uv \}} - tw - uv \Bigr)
+    \end{alignat*}
+    
+    and the hypothesis that they are all zero implies
+    \[ \max {\{ tu + vw,\, tv + uw,\, tw + uv \}} = tu + vw = tv + uw = tw + uv \]
+
+    By rearranging we get also
+    \[ tu = tv + uw - vw = tw + uv - vw \] \bigskip
+    
+    Observe that by triangle inequality \vspace{\abovedisplayskip}
+    \begin{align*}
+        \beta_{\{t\},\{u,v\}} &= \frac{1}{2}\, \Bigl( \max {\{ tu + tv,\, tv + tu,\, \cancel{tt} + uv \}} - \cancel{tt} - uv \Bigr) \\[2pt]
+        &= \frac{1}{2}\, (tu + tv - uv)
+    \shortintertext{and similarly}
+        \beta_{\{t\},\{u,w\}} &= \frac{1}{2}\, (tu + tw - uw) \\[2pt]
+        \beta_{\{t\},\{v,w\}} &= \frac{1}{2}\, (tv + tw - vw)
+    \end{align*}
+
+    So we can rewrite the thesis as
+    \begin{align*}
+        tu &= \alpha_{\{t\},\{u,v,w\}} + \alpha_{\{u\},\{t,v,w\}} \\[2pt]
+        &= \frac{1}{2}\, \min {\Biggl\{
+            \begin{array}{c}
+            \begin{alignedat}{2}
+                tu &+ tv &&- uv, \\
+                tu &+ tw &&- uw, \\
+                tv &+ tw &&- vw
+            \end{alignedat}
+            \end{array}
+        \!\!\Biggr\}} + \frac{1}{2}\, \min {\Biggl\{\!
+            \begin{array}{c}
+            \begin{alignedat}{2}
+                tu &+ uv &&- tv, \\
+                tu &+ uw &&- tw, \\
+                uv &+ uw &&- vw
+            \end{alignedat}
+            \end{array}
+        \!\!\Biggr\}}
+    \end{align*} \bigskip
+
+    We apply the equalities proven at the beginning in the various cases.
+    \begin{alignat*}{3}
+        &(tu + \cancel{tv} - \cancel{uv}) &{}+{}& (tu + \cancel{uv} - \cancel{tv}) &{}={}& 2\,tu \\[10pt]
+        &(tu + \cancel{tw} - \cancel{uw}) &{}+{}& (tu + \cancel{uw} - \cancel{tw}) &{}={}& 2\,tu \\[10pt]
+        &(tu + tv - uv) &{}+{}& (tu + uw - tw) &{}={}& \\
+        &\mathrlap{\qquad = 2\,tu + (tv + uw) - (tw + uv) \mathcolor{red}{=} 2\,tu } \\[10pt]
+        &(tu + tw - uw) &{}+{}& (tu + uv - tv) &{}={}& \\
+        &\mathrlap{\qquad = 2\,tu + (tw + uv) - (tv + uw) \mathcolor{red}{=} 2\,tu } \\[10pt]
+        \\
+        &(tv + tw - vw) &{}+{}& (uv + uw - vw) &{}={}& \\
+        &\mathrlap{\qquad = (tv + uw - vw) + (tw + uv - vw) \mathcolor{red}{=} 2\,tu } \\[10pt]
+        &(\cancel{tv} + tw - vw) &{}+{}& (tu + uv - \cancel{tv}) &{}={}& \\
+        &\mathrlap{\qquad = tu + (tw + uv - vw) \mathcolor{red}{=} 2\,tu } \\[10pt]
+        &(tv + \cancel{tw} - vw) &{}+{}& (tu + uw - \cancel{tw}) &{}={}& \\
+        &\mathrlap{\qquad = tu + (tv + uw - vw) \mathcolor{red}{=} 2\,tu } \\[10pt]
+        &(tu + tv - \cancel{uv}) &{}+{}& (\cancel{uv} + uw - vw) &{}={}& \\
+        &\mathrlap{\qquad = tu + (tv + uw - vw) \mathcolor{red}{=} 2\,tu } \\[10pt]
+        &(tu + tw - \cancel{uw}) &{}+{}& (uv + \cancel{uw} - vw) &{}={}& \\
+        &\mathrlap{\qquad = tu + (tw + uv - vw) \mathcolor{red}{=} 2\,tu } \\[10pt]
+    \end{alignat*}
+    
+\end{proof}
+
+\begin{proposition}
+    The following conditions are equivalent:
+    \begin{enumerate}[label=(\roman*)]
+        \item every pseudo-metric on $X$ is totally decomposable
+        \item there are no non-zero split-prime pseudo-metrics on $X$
+        \item the cone generated by the split metrics coincide with $M(X)$
+    \end{enumerate}
+\end{proposition}
+\begin{proof}
+    (i $\Leftrightarrow$ ii) If all the split-prime functions are the zero function, \\
+    \bsp then the residue is also the zero function, since it is split-prime.
+    
+    Otherwise, if the residue is always the zero function, \\
+    \bsp then all the split-prime functions are the zero function \\
+    \bsp because they coincide with their residue. \bigskip
+
+    (i $\Leftrightarrow$ iii) A pseudo-metric is totally decomposable if and only if \\
+    \bsp it can be written as a conical combination of split metrics.
+\end{proof}
+
+\begin{proposition} \label{prop:4totd}
+    Every pseudo-metric on $4$ elements is totally decomposable.
+\end{proposition}
+\begin{proof}
+    This is equivalent to say that if $\, \card{X} = 4 \,$, \\
+    \bsp then there are no non-zero split-prime pseudo-metrics on $X$.
+
+    Suppose by absurd that $d$ is a split-prime pseudo-metrics on $X$. \\
+    Then all its isolation indices (relative to total splits) are equal to $0$. \\
+    But for \autoref{lemma:deqapa} this implies that $d$ is the zero function.
+\end{proof}
+
+\clearpage
+
+\begin{remark}
+    If we discard the split metric $\delta_{\{i,j\},\{h,k\}}$, \\[2pt]
+    where $\, \{i,j,h,k\} = \{t,u,v,w\} \eqdef X \,$, such that
+    \[ ij + hk = \max {\{ tu + vw,\, tv + uw,\, tw + uv \}} \eqspace{0pt}{-2pt} \]
+    \bsp (that is $\, \alpha_{\{i,j\},\{h,k\}} = 0 \,$), \\[3pt]
+    then we have a unique decomposition in split metrics for $n = 4$
+    \[ d = \sum_{S \,\in\, \Sc_d(X)} \alpha_S^d \cdot \delta_S \]
+    because the remaining split metrics are a vector basis of $M(X)$ \\
+    \bsp (they are linearly independent and in the right number).
+\end{remark}
+
+\begin{proposition}
+    The metric on $5$ elements $\hat{d}$ induced by the graph $K_{2,3}$ is split-prime.
+\end{proposition}
+\begin{proof}
+    It suffice to prove that there are no splits into two disjoint $\hat{d}$-convex subsets.
+\end{proof}
+
+\begin{remark}
+    In general, given a proper subset $Y \subset X$, \\
+    it is not true that the restriction of the residue \\
+    \bsp coincides with the residue of the restriction.
+    \[ \restr{d_0}{\YY} \mathcolor{red}{\not}= \bigl(\restr{d}{\YY}\bigr)_0 \]
+
+    In fact, the restriction of the metric $\hat{d}$ \\ 
+    \bsp (that coincide with its residue since it is split-prime) \\
+    is not the zero function because it is never $0$ outside the diagonal. \\
+    But its restrictions are totally decomposable, \\
+    \bsp so their residues are the zero function.
+\end{remark}
+
+\clearpage
+
+\begin{theorem}[{\cites[Theorem 6]{BD92a}}] \label{teo:teo6}
+    Let $\, d : \XX \to \R \,$ be a symmetric function with zero diagonal. \\
+    Then the following conditions are equivalent:
+    \begin{enumerate}[label=(\roman*)]
+        \item $d$ is totally decomposable
+        \item for every partial split $T$
+            \[ \alpha_T = \sum\ \bigl\{\, \alpha_S \mid S \in \Sc_d(X),\ S \succcurlyeq T \,\bigr\} \]
+        \item for all $\, t,u,v,w,x \in X \,$
+            \[ \alpha_{\{t,u\},\{v,w\}} = \alpha_{\{t,u,x\},\{v,w\}} + \alpha_{\{t,u\},\{v,w,x\}} \]
+        \item for all $\, t,u,v,w,x \in X \,$
+            \[ \alpha_{\{t,u\},\{v,w\}} \leq \alpha_{\{t,x\},\{v,w\}} + \alpha_{\{t,u\},\{v,x\}} \]
+    \end{enumerate}
+\end{theorem}
+\begin{proof}
+    (i $\Rightarrow$ ii) By definition of total decomposability, we have
+    \[ d = \sum_{S \,\in\, \Sc_d(X)} \alpha_S \cdot \delta_S \]
+
+    For any proper subset $Y \subset X$
+    \[ \restr{d}{\YY} = \sum_{S \,\in\, \Sc_d(X)} \alpha_S \cdot \restr{\delta_S}{\YY} = \sum\ \bigl\{\, \lambda_T \cdot \delta_T \mathrel{\big|} T \in \Sc(Y) \,\bigr\} \]
+    where $\, \lambda_T = \sum\ \bigl\{\, \alpha_S \mathrel{\big|} S \in \Sc_d(X),\ S \succcurlyeq T \,\bigr\} \,$.
+
+    From \autoref{teo:teo1}, we have $\, \lambda_T \leq \alpha_T \,$ for every $T$ split of $Y$. Thus
+    \[ \bigl\{\, T \in \Sc(Y) \mathrel{\big|} \lambda_T > 0 \,\bigr\} \subseteq \Sc_d(Y) \]
+    so it is weakly compatible.
+    
+    Applying \autoref{teo:teo3} to this set and $\restr{d}{\YY}$ we get $\, \alpha_T = \lambda_T \,$. \bigskip \bigskip
+
+    (ii $\Rightarrow$ iii) Let $\, t,u,v,w,x \in X \,$. Then
+    \begin{align*}
+        \alpha_{\{t,u\},\{v,w\}} &= \sum\ \Bigl\{\, \alpha_S \mathrel{\Big|} S \in \Sc_d(X),\ S \succcurlyeq \bigl\{ \{t,u\},\{v,w\} \bigr\} \Bigr\} \\
+        &= \sum\ \Bigl\{\, \alpha_S \mathrel{\Big|} S \in \Sc_d(X),\ S \succcurlyeq \bigl\{ \{t,u,x\},\{v,w\} \bigr\} \Bigr\} \\
+        &\quad + \sum\ \Bigl\{\, \alpha_S \mathrel{\Big|} S \in \Sc_d(X),\ S \succcurlyeq \bigl\{ \{t,u\},\{v,w,x\} \bigr\} \Bigr\} \\
+        &= \alpha_{\{t,u,x\},\{v,w\}} + \alpha_{\{t,u\},\{v,w,x\}}
+    \end{align*} \bigskip
+
+    (iii $\Rightarrow$ iv) Let $\, t,u,v,w,x \in X \,$. Then
+    \begin{alignat*}{2}
+        \alpha_{\{t,u\},\{v,w\}} &{}={}& \alpha_{\{t,u,x\},\{v,w\}} &{}+{} \alpha_{\{t,u\},\{v,w,x\}} \\
+        &\leq{}& \alpha_{\{t,x\},\{v,w\}} &{}+{} \alpha_{\{t,u\},\{v,x\}}
+    \end{alignat*} \bigskip
+
+    (iv $\Rightarrow$ iii) Let $\, t,u,v,w,x \in X \,$. By \autoref{teo:teo1} we have
+    \[ \alpha_{\{t,u,x\},\{v,w\}} + \alpha_{\{t,u\},\{v,w,x\}} \leq \alpha_{\{t,u\},\{v,w\}} \eqspace{0pt}{\bigskipamount} \]
+
+    On the other hand, thanks to \autoref{prop:aeqb},
+    \begin{align*}
+        \alpha_{\{t,u,x\},\{v,w\}} &= \min \bigl\{ \alpha_{\{t,u\},\{v,w\}}, \alpha_{\{t,x\},\{v,w\}}, \alpha_{\{u,x\},\{v,w\}} \bigr\} \\
+        \alpha_{\{t,u\},\{v,w,x\}} &= \min \bigl\{ \alpha_{\{t,u\},\{v,w\}}, \alpha_{\{t,u\},\{v,x\}}, \alpha_{\{t,u\},\{w,x\}} \bigr\} 
+    \end{align*}
+
+    Applying condition (iv) with respect to $x$ and either
+    \[ t,u;v,w \,, \quad t,u;w,u \,, \quad u,t;v,w \,, \quad u,t;w,v \]
+    we get
+    \begin{alignat*}{3}
+        \alpha_{\{t,u\},\{v,w\}} &\leq \alpha_{\{t,x\},\{v,w\}} &{}+{}& \alpha_{\{t,u\},\{v,x\}} \\
+        \alpha_{\{t,u\},\{w,v\}} &\leq \alpha_{\{t,x\},\{w,v\}} &{}+{}& \alpha_{\{t,u\},\{w,x\}} \\
+        \alpha_{\{u,t\},\{v,w\}} &\leq \alpha_{\{u,x\},\{v,w\}} &{}+{}& \alpha_{\{u,t\},\{v,x\}} \\
+        \alpha_{\{u,t\},\{w,v\}} &\leq \alpha_{\{u,x\},\{w,v\}} &{}+{}& \alpha_{\{u,t\},\{w,x\}}
+    \end{alignat*}
+
+    Therefore
+    \begin{align*}
+        \alpha_{\{t,u,x\},\{v,w\}} + \alpha_{\{t,u\},\{v,w,x\}} &= \min {\left\{
+            \begin{array}{c}
+            \begin{aligned}
+                 \mathcolor{red}{\alpha_{\{t,u\},\{v,w\}} &+ \alpha_{\{t,u\},\{v,w\}}}, \\
+                 \mathcolor{red}{\alpha_{\{t,x\},\{v,w\}} &+ \alpha_{\{t,u\},\{v,w\}}}, \\
+                 \mathcolor{red}{\alpha_{\{u,x\},\{v,w\}} &+ \alpha_{\{t,u\},\{v,w\}}}, \\
+                 \mathcolor{red}{\alpha_{\{t,u\},\{v,w\}} &+ \alpha_{\{t,u\},\{v,x\}}}, \\
+                 \alpha_{\{t,x\},\{v,w\}} &+ \alpha_{\{t,u\},\{v,x\}}, \\
+                 \alpha_{\{u,x\},\{v,w\}} &+ \alpha_{\{t,u\},\{v,x\}}, \\
+                 \mathcolor{red}{\alpha_{\{t,u\},\{v,w\}} &+ \alpha_{\{t,u\},\{w,x\}}}, \\
+                 \alpha_{\{t,x\},\{v,w\}} &+ \alpha_{\{t,u\},\{w,x\}}, \\
+                 \alpha_{\{u,x\},\{v,w\}} &+ \alpha_{\{t,u\},\{w,x\}}
+            \end{aligned}
+            \end{array}
+        \right\}} \\
+        &\geq \min {\left\{
+            \begin{array}{c}
+            \begin{aligned}
+                 &\hspace{-2em} \alpha_{\{t,u\},\{v,w\}}, \\
+                 \alpha_{\{t,x\},\{v,w\}} &+ \alpha_{\{t,u\},\{v,x\}}, \\
+                 \alpha_{\{t,x\},\{v,w\}} &+ \alpha_{\{t,u\},\{w,x\}}, \\
+                 \alpha_{\{u,x\},\{v,w\}} &+ \alpha_{\{t,u\},\{v,x\}}, \\
+                 \alpha_{\{u,x\},\{v,w\}} &+ \alpha_{\{t,u\},\{w,x\}}
+            \end{aligned}
+            \end{array}
+        \right\}} \\
+        &\geq \alpha_{\{t,u\},\{v,w\}}
+    \end{align*}
+    where we lower bounded the expressions in the first line with $\alpha_{\{t,u\},\{v,w\}}$, \\
+    \bsp and used the previous inequalities in the second line.
+    \bigskip
+
+    (iii $\Rightarrow$ i) \textcolor{LimeGreen}{\textbf{Omitted}}.
+\end{proof}
+
+\begin{corollary}
+    Let $d$ a totally decomposable pseudo-metric, \\[1pt]
+    \bsp $\{A,B\}$ a $d$-split and $\, a_1,a_2 \in A,\, b_1,b_2 \in B \,$.
+
+    Then $\{A,B\}$ is the only $d$-split extension of $\bigl\{ \{a_1,a_2\},\{b_1,b_2\} \bigr\}$ \\[1pt]
+    \bsp if and only if $\, \alpha_{\{a_1,a_2\},\{b_1,b_2\}} = \aAB \,$.
+\end{corollary}
+\begin{proof}
+    ($\Rightarrow$) By \autoref{teo:teo6}
+    \begin{align*}
+        \alpha_{\{a_1,a_2\},\{b_1,b_2\}} &\mathcolor{blue}{=} \sum\ \Bigl\{\, \alpha_S \mathrel{\Big|} S \in \Sc_d(X),\ S \succcurlyeq \bigl\{ \{a_1,a_2\},\{b_1,b_2\} \bigr\} \Bigr\} \\
+        &= \aAB
+    \end{align*}
+    since we are supposing $\{A,B\}$ is the only $d$-split extension.
+
+    ($\Leftarrow$) By \autoref{teo:teo6}
+    \begin{align*}
+        \aAB &= \alpha_{\{a_1,a_2\},\{b_1,b_2\}} \\[2pt]
+        &\mathcolor{blue}{=} \sum\ \Bigl\{\, \alpha_S \mathrel{\Big|} S \in \Sc_d(X),\ S \succcurlyeq \bigl\{ \{a_1,a_2\},\{b_1,b_2\} \bigr\} \Bigr\}
+    \end{align*}
+    and since $\aAB$ is a term of the sum, it must be the only one.
+\end{proof} \bigskip \bigskip
+
+
+Consider $\, a_1,a_2,a_3,a_4 \in X \,$ such that $\, \alpha_{\{a_1,a_2\},\{a_3,a_4\}} > 0 \,$ and the sets
+\begin{align*}
+    A &\defeq \bigl\{\, x \in X \mathrel{\big|} \alpha_{\{a_1,a_2\},\{a_3,a_4,x\}} = 0 \,\bigr\} \\[5pt]
+    B &\defeq \bigl\{\, x \in X \mathrel{\big|} \alpha_{\{a_1,a_2,x\},\{a_3,a_4\}} = 0 \,\bigr\}
+\end{align*}
+
+Suppose that the following identity holds for all $\, x \in X,\ x \neq a_1,a_2,a_3,a_4 \,$
+\[ \alpha_{\{a_1,a_2\},\{a_3,a_4\}} \,=\, \alpha_{\{a_1,a_2,x\},\{a_3,a_4\}} \,+\, \alpha_{\{a_1,a_2\},\{a_3,a_4,x\}} \]
+
+Then we have $\, a_1,a_2 \in A \,$ and $\, a_3,a_4 \in B \,$.
+
+Notice that all the extensions of $\bigl\{ \{a_1,a_2\},\{a_3,a_4\} \bigr\}$ with at least one element of $A$ in the second part have isolation index equal to 0. \\
+In fact $\alpha_{\{a_1,a_2\},\{a_3,a_4,x\}} = 0$ and by extending the isolation index cannot increase. \\
+Idem for extensions of $\bigl\{ \{a_1,a_2\},\{a_3,a_4\} \bigr\}$ with at least one element of $B$ in the first part.
+
+So between the split extensions of $\bigl\{ \{a_1,a_2\},\{a_3,a_4\} \bigr\}$, \\
+\bsp the only possibly non-zero isolation index is that of the split $\{A,B\}$ \\
+(that is all elements of $A$ in the first part and all elements of $B$ in the second part).
+
+If $d$ is totally decomposable, then by \autoref{teo:teo6}
+\[ \alpha_{\{a_1,a_2\},\{a_3,a_4\}} \mathcolor{blue}{=} \sum\ \Bigl\{\, \alpha_S \mathrel{\Big|} S \in \Sc_d(X),\ S \succcurlyeq \bigl\{ \{a_1,a_2\},\{a_3,a_4\} \bigr\} \Bigr\} = \aAB \]
+
+\clearpage
+
+This suggest a polynomial algorithm to check whether a symmetric function $d$ is totally decomposable and to compute the $d$-splits and their isolation indices:
+\begin{itemize}
+    \item check the identity 
+    \[ \alpha_{\{a_1,a_2\},\{a_3,a_4\}} \,=\, \alpha_{\{a_1,a_2,x\},\{a_3,a_4\}} \,+\, \alpha_{\{a_1,a_2\},\{a_3,a_4,x\}} \eqspace{-3pt}{2pt} \]
+    for all quartets $\bigl\{ \{a_1,a_2\},\{a_3,a_4\} \bigr\}$ which have non-zero isolation index
+    \item if the identity holds, then check if $\, A \cup B = X \,$
+    \item if this is true, then $\{A,B\}$ is a $d$-split and its isolation index is
+    \[ \alpha_{\{a_1,a_2\},\{a_3,a_4\}} \]
+\end{itemize} \bigskip
+
+Due to the $5$-point condition, this algorithm has complexity $\mathcal{O}(n^5)$.
+
+\textbf{Question}: Does it exist an $\mathcal{O}(n^5)$ algorithm for the general case?
+
+
+\vspace{\baselineskip} \Hrule
+\clearpage
+
+\begin{definition}[compatibility]
+    Given two splits $\{A,B\}$ and $\{A^\prime,B^\prime\}$, we say that they are \textbf{compatible} \\[1pt]
+    \bsp if one of the following four intersections is empty
+    \[ A \cap A^\prime \,, \quad A \cap B^\prime \,, \quad B \cap A^\prime \,, \quad B \cap B^\prime \]
+
+    We say that a set of splits is \textbf{compatible} if its splits are (pairwise) compatible.
+\end{definition}
+
+\begin{remark}
+    Subsets of compatible sets are compatible.
+\end{remark}
+
+\begin{remark}
+    A compatible set of splits is weakly compatible. \bigskip
+
+    In fact, consider for every quartet $\bigl\{ \{t,u\},\{v,w\} \bigr\}$ the sets
+    \begin{align*}
+        \Sc_0 &= \Bigl\{ S \in \Sc \mathrel{\Big|} S \succcurlyeq \bigl\{ \{t,u\},\{v,w\} \bigr\} \Bigr\} \\[5pt]
+        \Sc_1 &= \Bigl\{ S \in \Sc \mathrel{\Big|} S \succcurlyeq \bigl\{ \{t,v\},\{u,w\} \bigr\} \Bigr\} \\[5pt]
+        \Sc_2 &= \Bigl\{ S \in \Sc \mathrel{\Big|} S \succcurlyeq \bigl\{ \{t,w\},\{u,v\} \bigr\} \Bigr\}
+    \end{align*}
+
+    Weak compatibility is equivalent to ask that at least \textit{one} of these sets is empty. \medskip
+
+    Notice that two splits from two different sets are not compatible: \\
+    in fact, if WLOG
+    \begingroup \nospblw
+    \begin{alignat*}{4}
+        &\{A,B\} &&\in \Sc_0 \,, \qquad A &&\ni t,u \,,\ B &&\ni v,w \\
+        &\{A^\prime,B^\prime\} &&\in \Sc_1 \,, \qquad A^\prime &&\ni t,v \,,\ B^\prime &&\ni u,w
+    \end{alignat*}
+    \endgroup
+    then
+    \[ A \cap A^\prime = \{t\} \,, \quad A \cap B^\prime = \{u\} \,, \quad B \cap A^\prime = \{v\} \,, \quad B \cap B^\prime = \{w\} \]
+    Thus compatibility is equivalent to ask that at most one of the sets is non-empty (that is at least \textit{two} must be empty).
+\end{remark}
+
+\clearpage
+
+\begin{definition}[four-point condition]
+    We say that $d$ satisfies the \textbf{four-point condition} \\
+    \bsp if for any four points $\, t,u,v,w \in X \,$ it holds
+    \[ tu + vw \,\leq\, \max {\{\, tv + uw,\, tw + uv \,\}} \]
+\end{definition}
+
+\begin{proposition}
+    A symmetric function $d$ satisfies the four-point condition \\
+    if and only if, for any four points $\, t,u,v,w \in X \,$, \\
+    \bsp it exists a permutation of $\, t,u,v,w \,$ in $\, i,j,h,k \,$ respectively such that
+    \[ ij + hk \,\leq\, ih + jk \,=\, ik + jh \nospblw \]
+\end{proposition}
+\begin{proof}
+    ($\Leftarrow$) Consider the permutation that gives
+    \[ ij + hk \,\leq\, ih + jk \,=\, ik + jh \]
+    Then we have
+    \begin{alignat*}{8}
+        ij &+ hk &&\leq \max\, \{\,& ih &{}+{}& jk,\,{}& ik &&+ jh &&\,\} \\
+        ih &+ jk &&\leq \max\, \{\,& ij &{}+{}& hk,\,{}& ik &&+ jh &&\,\} \\
+        ik &+ jh &&\leq \max\, \{\,& ij &{}+{}& hk,\,{}& ih &&+ jk &&\,\}
+    \end{alignat*} \smallskip
+
+    ($\Rightarrow$) Applying the four-point condition to $t,u;v,w$\,, $t,v;u,w$ and $t,w;u,v$ we get
+    \begin{alignat*}{8}
+        tu &+ vw &&\leq \max\, \{\,& tv &{}+{}& uw,\,{}& tw &&+ uv &&\,\} \\
+        tv &+ uw &&\leq \max\, \{\,& tu &{}+{}& vw,\,{}& tw &&+ uv &&\,\} \\
+        tw &+ uv &&\leq \max\, \{\,& tv &{}+{}& uw,\,{}& tu &&+ vw &&\,\}
+    \end{alignat*}
+
+    Let $L,M,N$ be such that $\, \{L,M,N\} = \{tu + vw,\, tv + uw,\, tw + uv\} \,$ \\[1pt]
+    \bsp and $L \leq M \leq N$ (that is we order the three expressions).
+    
+    If by absurd $N > M$ (and thus $N > L$) then
+    \[ N \not\leq \max {\{L,M\}} \]
+    that violates the four-point condition. \absurd
+\end{proof}
+
+\begin{remark}
+    If $d$ is a pseudo-metric satisfying the four-point condition \\
+    \bsp and $\alpha_{\{t,u\},\{v,w\}} > 0$, then
+    \[ tu + vw < tv + uw = tw + uv \]
+
+    In fact, $tu + vw$ cannot be the maximum among the three \\
+    (otherwise the isolation index would be zero for \autoref{prop:aeqb}).
+\end{remark}
+
+\begin{proposition} \label{prop:SYeqSX}
+    If $d$ is a totally decomposable pseudo-metric, then
+    \[ \Sc_d(Y) = \restr{\Sc_d(X)}{Y} \,, \quad \forall\, Y \subseteq X \nospblw \]
+\end{proposition}
+\begin{proof}
+    Let $Y \subseteq X$. Clearly a $d$-split of $X$ is also a $d$-split of $Y$, because by restricting the isolation index cannot decrease. So $\, \Sc_d(Y) \supseteq \restr{\Sc_d(X)}{Y} \,$.
+
+    If $\, T \in \Sc_d(Y) \,$, from \autoref{teo:teo6}
+    \[ 0 < \alpha_T \mathcolor{blue}{=} \sum\ \bigl\{\, \alpha_S \mid S \in \Sc_d(X),\ S \succcurlyeq T \,\bigr\} \]
+    that means there are $d$-splits on $X$ which are extensions of $T$. \\
+    Moreover, the restriction of these extensions to $Y$ gives exactly $T$. \\[3pt]
+    Thus $\, \Sc_d(Y) \subseteq \restr{\Sc_d(X)}{Y} \,$. \qedhere
+\end{proof} \bigskip
+
+\begin{corollary}[{\cites[Corollary 7]{BD92a}}] \label{cor:cor7}
+    Let $d$ be a pseudo-metric on $X$.
+
+    Then $d$ is totally decomposable and any two $d$-splits are compatible \\
+    \bsp if and only if $d$ satisfies the four-point condition.
+\end{corollary}
+\begin{proof}
+    ($\Rightarrow$) Let $\, t,u,v,w \in X \,$. We are assuming that $d$ is totally decomposable and $\Sc_d(X)$ is compatible.
+    
+    Since compatibility is preserved by restriction, from the previous \autoref{prop:SYeqSX} we get that $\Sc_d(Y)$ is compatible for all subsets $Y$ of $X$. In particular $\, \Sc_d(\{t,u,v,w\}) \,$ is compatible.
+\clearpage
+    By compatibility, at least two quartets cannot be $d$-splits \\[1pt]
+    -- suppose WLOG $\bigl\{ \{t,v\},\{u,w\} \bigr\}$ and $\bigl\{ \{t,w\},\{u,v\} \bigr\}$. \\[2pt]
+    This means that their isolation index is $0$ and, \\
+    \bsp by \autoref{prop:aeqb}, this implies that
+    \[ \max {\{ tu + vw,\, tv + uw,\, tw + uv \}} = tv + uw = tw + uv \]
+
+    If $\, \alpha_{\{t,u\},\{v,w\}} = 0 \,$, then for the same reason
+    \[ tu + vw = tv + uw = tw + uv \]
+    If $\, \alpha_{\{t,u\},\{v,w\}} > 0 \,$, since $tu + vw$ cannot be the maximum
+    \[ tu + vw < tv + uw = tw + uv \]
+    In both cases the four-point condition is satisfied. \bigskip \bigskip
+
+    ($\Leftarrow$) Let $\, t,u,v,w \in X \,$. If $\, \alpha_{\{t,u\},\{v,w\}} = 0 \,$, then for every $x \in X$
+    \[ 0 = \alpha_{\{t,u\},\{v,w\}} \leq \alpha_{\{t,x\},\{v,w\}} + \alpha_{\{t,u\},\{v,x\}} \]
+    since isolation indices are not negative.
+    
+    Now suppose $\, \alpha_{\{t,u\},\{v,w\}} > 0 \,$. We are assuming that $d$ satisfies \\[1pt]
+    the four-point condition, thus for the previous remark
+    \[ tu + vw < tv + uw = tw + uv \]
+    Then for every $x \in X$
+    \begin{align*}
+        \alpha_{\{t,u\},\{v,w\}} &= \frac{1}{2}\, \Bigl( \max {\{ tv + uw,\, tw + uv,\, tu + vw \}} - tu - vw \Bigr) \\[2pt]
+        &\mathcolor{red}{=} \frac{1}{2}\, \bigl( tw + uv - tu - vw \bigr) \\[2pt]
+        &= \frac{1}{2}\, \bigl( tw + xv - tx - vw \bigr) + \frac{1}{2}\, \bigl( tx + uv - tu - vx \bigr) \\[2pt]
+        &\leq \frac{1}{2}\, \Bigl( \max {\{ tv + xw,\, tw + xv,\, tx + vw \}} - tx - vw \Bigr) \\
+        &\quad + \frac{1}{2}\, \Bigl( \max {\{ tv + ux,\, tx + uv,\, tu + vx \}} - tu - vx \Bigr) \\[2pt]
+        &= \alpha_{\{t,x\},\{v,w\}} + \alpha_{\{t,u\},\{v,x\}}
+    \end{align*}
+
+    By \autoref{teo:teo6} this proves that $d$ is totally decomposable. \bigskip
+\clearpage
+    Suppose by absurd to have two incompatible $d$-splits \\[1pt]
+    \bsp $\{A,B\}$ and $\{A^\prime,B^\prime\}$. \\[1pt]
+    Then we can suppose that exist $\, t,u,v,w \in X \,$ such that
+    \[ t,u \in A \,, \quad v,w \in B \,, \quad t,v \in A^\prime \,, \quad u,w \in B^\prime \nospblw \]
+
+    Since $d$ is totally decomposable, its restriction to $\{t,u,v,w\}$ is a conical combination of split metrics that splits 2-2 (that is they extend one of the quartets) and 3-1 (the trivial split metrics).
+    
+    But the latter contribute equally to the three distances
+    \[ tu + vw \,, \qquad tv + uw \,, \qquad tw + uv \]
+    In fact, if $x \in \{t,u,v,w\}$, then
+    \[ \delta_x(t,u) + \delta_x(v,w) = \delta_x(t,v) + \delta_x(u,w) = \delta_x(t,w) + \delta_x(u,v) = 1 \]
+    otherwise, if $x \not\in \{t,u,v,w\}$, then
+    \[ \delta_x(t,u) + \delta_x(v,w) = \delta_x(t,v) + \delta_x(u,w) = \delta_x(t,w) + \delta_x(u,v) = 0 \]
+
+    Since $d$-splits are weakly compatible (\autoref{prop:dswc}) and
+    \[ \{A,B\} \succcurlyeq \bigl\{ \{t,u\},\{v,w\} \bigr\} \,, \qquad \{A^\prime,B^\prime\} \succcurlyeq \bigl\{ \{t,v\},\{u,w\} \bigr\} \]
+    then $\bigl\{ \{t,w\},\{u,v\} \bigr\}$ does not have any $d$-split extension.
+
+    So the only different contributions come from split metrics \\
+    \bsp that split like $\delta_{A,B}$ and $\delta_{A^\prime,B^\prime}$. But
+    \begin{alignat*}{5}
+        &\delta_{A,B}(t,u) &&+ \delta_{A,B}(v,w) &&= 0 \qquad \delta_{A^\prime,B^\prime}(t,u) &&+ \delta_{A^\prime,B^\prime}(v,w) &&= 2 \\
+        &\delta_{A,B}(t,v) &&+ \delta_{A,B}(u,w) &&= 2 \qquad \delta_{A^\prime,B^\prime}(t,v) &&+ \delta_{A^\prime,B^\prime}(u,w) &&= 0 \\
+        &\delta_{A,B}(t,w) &&+ \delta_{A,B}(u,v) &&= 2 \qquad \delta_{A^\prime,B^\prime}(t,w) &&+ \delta_{A^\prime,B^\prime}(u,v) &&= 2
+    \end{alignat*}
+
+    As a consequence we have
+    \[ tw + uv \ >
+        \begin{array}{l}
+            tv + uw \\
+            tu + vw
+        \end{array}
+    \]
+    violating the four-point condition. \absurd
+\end{proof}
+
+\end{document}

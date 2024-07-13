@@ -1,0 +1,66 @@
+\documentclass[./main.tex]{subfiles}
+\begin{document}
+\ifSubfilesClassLoaded{\mainmatter}{}
+
+\altchapter{Introduction} \label{chap:intro}
+
+\begin{displayquote}[\textup{\cites[Preface]{SS03}}][]
+    \textup{[...]} a fundamental problem that has been of interest since Charles Darwin first proposed the theory of evolution. Namely, how can one use the present-day characteristics of a group of species to infer, in their evolution from a common ancestor, the historical relationships between these species? Typically, these historical relationships are represented by an evolutionary (phylogenetic) tree and such representations were already suggested by Darwin in the nineteenth century. Determining this tree for different groups of species, or groups of populations, is fundamental to many questions in evolutionary biology as well as for related areas such as conservation genetics and epidemiology. \textup{[...]} \par
+    Over time these questions have been studied from many perspectives, particularly as the types of data available have increased. Initially, comparisons of the physical characteristics of species, such as their morphology or physiology, gave clues to their evolutionary relationships. However, there are processes that can mislead simplistic inferences. For example, the same characteristic can evolve independently in unrelated species (convergent evolution), or a characteristic can evolve and later disappear (reverse transitions). \textup{[...]} \par
+    From the biologist's perspective, the field was revolutionized by the arrival of molecular data. This began with protein sequences in the late 1960s, genetic (DNA and RNA) sequences in the late 1970s, and most recently whole genome data. The abundance of these data has led to the resolution of many outstanding problems in biology, along with extensive revision in what had previously been believed. \textup{[...]}
+\end{displayquote}
+
+\clearpage
+
+Various methods have been proposed to tackle the problem of phylogenetic reconstruction.
+
+One approach is that of sequence-based methods, whose main representatives are maximum parsimony, maximum likelihood and Bayesian inference. \\
+These methods deal directly with the sequences and are typically of probabilistic nature.
+
+Another approach is constituted by distance-based methods, which instead operate on a distance matrix obtained by pairwise dissimilarities between the sequences. Examples are UPGMA and Neighbor-joining.
+
+All the mentioned methods have one thing in common: they all produce a tree.\bigskip
+
+\begin{displayquote}[\textup{\cites[Preface]{HRS11}}][]
+    By definition, phylogenetic trees are well suited to represent evolutionary histories in which the main events are speciations (at the internal nodes of the tree) and descent with modification (along the edges of the tree). But such trees are less suited to model mechanisms of reticulate evolution, such as horizontal gene transfer, hybridization, recombination or reassortment. Moreover, mechanisms such as incomplete lineage sorting, or complicated patterns of gene duplication and loss, can lead to incompatibilities that cannot be represented on a tree. Although the analysis of individual genes or short stretches of genomic sequence often gives strong support to a phylogenetic tree, different genes or sequence segments usually support different trees.
+\end{displayquote}\bigskip
+
+There are some biological phenomena that lead to think that in several cases evolution is not best described by a tree. \\
+Moreover, even in cases where a tree representation is suitable, there may be noise or incompatibilities within the data that makes it necessary to approximate the real tree. \\
+Or we may be able to construct a lot of different trees with different methods, each giving some information about the evolutionary history; these trees may be incompatible with each other, thus it arises the problem of resolving these conflicts (usually this is done by a consensus tree).
+
+\clearpage
+
+In 1992, Bandelt and Dress proposed a method that try to solve these issues. In particular it is a non-approximative method that allows to display the inconsistencies in the data (through so called splits) and to what extent they are supported (by assigning an index or coefficient). Most notably, the output can be represented as a network (that is not necessarily a tree).\bigskip
+
+\begin{displayquote}[\textup{\cite{BD92b}}][]
+    Phylogenetic analysis of molecular sequence data often is carried out by first calculating pairwise similarity coefficients, converting these into evolutionary distances, and finally applying some distance-matrix method in order to estimate an unrooted phylogenetic tree. Goodness-of-fit would be judged by comparing the evolutionary distances with the additive distances read off the estimated tree. So, data are fit to a best (or at least, near-optimal) tree, whether or not they bear any resemblance with additive tree data. In practice, one tries to avoid methodological artifacts by applying different tree approximation methods (some operating on sequence data, others using derived distances) and then putting up with a strict consensus tree. Still, one may fall into the trap of systematic error when the methods are subject to the same bias and all disguise true phylogenetic relationships. \par
+    We therefore propose to accompany any phylogenetic analysis by a nonapproximative method as well that allows for conflicting alternative grouping (to some extent) and hence is able to detect some of those distinctive minor features in distance data which are dominated by others and not supported by estimated trees. This goal can be achieved by split decomposition, developed by Bandelt and Dress (1992), which may be regarded as a kind of factor analysis for distance matrices. It decomposes any dissimilarity matrix $d$ into a number of “binary factors,” described as “splits” weighted by “isolation indices,” plus a residual indecomposable term (here interpreted as noise). For phylogenetic analysis split decomposition serves two purposes: (a) to exhibit tentative phylogenetic relationships even when they are overridden by parallel events, and (b) to detect groupings brought about by pronounced convergence or systematic error.
+\end{displayquote}
+
+\clearpage
+
+This thesis focuses on the joint article, \cite{BD92a}, that builds the mathematical foundations for the split decomposition method.
+
+I will explain the theory of split decomposition, as delineated in the original article, with some additions. In particular, I elaborated more on the omitted details, expanded the introductory chapter and added some results which were not present in the article.\bigskip
+
+\begin{FlushLeft}\setlength{\parskip}{0pt}\hangpara{15pt}{1}%
+In \autoref{chap:p2c1} we introduce one of the most important type of distance function and present some of its geometric properties. \par\hangpara{15pt}{1}%
+In \autoref{chap:p2c2} we state the principal definitions of the theory and the intermediate results leading to the canonical decomposition theorem. \par\hangpara{15pt}{1}%
+In \autoref{chap:p2c3} we see some properties of the set of splits (the main object of the theory) obtained by the split decomposition method. \par\hangpara{15pt}{1}%
+In \autoref{chap:p2c4} we investigate the properties of a special class of functions, called totally decomposable, whose decomposition is particularly nice. \par\hangpara{15pt}{1}%
+In \autoref{chap:p3c1} we show the application of the theory to the problem of phylogenetic reconstruction. \par\hangpara{15pt}{1}%
+In \autoref{chap:p3c2} we analyze in more detail the algorithm of the split decomposition method.
+\end{FlushLeft}
+
+\clearpage
+
+As a final note, we want to mention that there are good reasons to be interested in the theory behind these methods: the wealth of data available today forces us to rely on automated processing, thus it is desirable to have guarantees about their soundness and robustness; phylogenetic techniques (in particular distance-based methods) are very flexible and find application even outside phylogenetics, thus it is necessary to have a theory that prescinds by the specific application; thinking about the challenges of the problems proposed by phylogenetics (and more in general, by biology) gives inspirations to explore new areas of mathematics \cite{Coh04,Stu05}.\bigskip
+
+\begin{displayquote}[\textup{\cites[Preface]{SS03}}][]
+    Today, the field of phylogenetics---the reconstruction and analysis of phylogenetic trees and networks---is a flourishing area of interaction between mathematics, statistics, computer science, and biology.\par
+    \textup{[...]} Applications of these techniques extend well beyond `reconstructing the past', and the methods are applied in areas such as epidemiology to investigate the origins, relationships, and future development of viruses such as influenza and HIV. Other areas where phylogenetic methods have found applications include ecology (for classifying new species), medicine, and some quite different areas of classification such as linguistics and cognitive psychology.\par
+    Our interest in this book is the mathematical foundations of phylogenetics. These foundations date back at least to the pioneering work by Peter Buneman, David Sankoff, and others in the early 1970s. Curiously, Buneman's early paper (1971) dealt not with biology but rather with reconstructing the copying history of manuscripts. The data-driven expansion of phylogenetics during the 1980s and 1990s has led to the need for further mathematical development. \textup{[...]}
+\end{displayquote}
+
+\end{document}

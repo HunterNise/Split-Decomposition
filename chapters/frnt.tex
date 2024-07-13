@@ -1,0 +1,70 @@
+% https://it.overleaf.com/latex/templates/esempio-frontespizio/mpnsrjxvwcfc
+
+\newlength{\mylen}
+\setlength{\mylen}{1cm}
+
+\newlength{\frnleft}
+\setlength{\frnleft}{\geometryget{left}}
+
+\newlength{\frnright}
+\ifthenelse{\boolean{cover}}
+    {\setlength{\frnright}{\geometryget{left}}}
+    {\setlength{\frnright}{\geometryget{right}}}
+
+\newgeometry{
+    top     = 2\mylen,
+    bottom  = 1.5\mylen,
+    left    = \frnleft,
+    right   = \frnright
+}
+
+
+\begin{titlepage}
+\begin{center}
+    \includegraphics[height=4\mylen]{logo/marchio_unipi_pant541}
+    \vspace*{0.75\mylen}
+
+    {\large \scshape
+        Dipartimento di Matematica \\[0.5em]%
+        Corso di Laurea Triennale in Matematica%
+    }
+    \vspace*{2\mylen}
+
+    {\large \scshape
+        Tesi di Laurea Triennale%
+    }
+    \vspace*{1.5\mylen}
+    
+    {\huge
+        \textbf{Split Decomposition}%
+    }
+    \vspace*{0.75\mylen}
+
+    {\LARGE
+        Properties and Algorithms of the Split Decomposition Method in Phylogenetics%
+    }
+    \vspace*{2.75\mylen}
+
+    \begin{minipage}[t]{0.47\textwidth}\large
+        {Relatore:} \vspace{0.5em} \\
+            {\Large \textbf{Roberto Grossi}} \vspace{1.5em}
+        
+        {Correlatore:} \vspace{0.5em} \\
+            {\Large \textbf{Veronica Guerrini}}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.47\textwidth}\raggedleft\large
+        {Candidato:} \hspace{-0.9em} \vspace{0.5em} \\
+            {\Large \textbf{Alessandro Moretti}}
+    \end{minipage}
+
+    \vfill
+    
+    {\large \scshape
+        Anno Accademico 2023/2024%
+    }
+\end{center}
+\end{titlepage}
+
+
+\restoregeometry

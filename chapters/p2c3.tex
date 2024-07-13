@@ -1,0 +1,363 @@
+\documentclass[./main.tex]{subfiles}
+\begin{document}
+\ifSubfilesClassLoaded{\mainmatter}{}
+
+\chapter{Weak compatibility} \label{chap:p2c3}
+
+Let $\, d : \XX \to \R \,$ be a symmetric function.
+
+\begin{remark}
+    Let $\, t,u,v,w\in X \,$. \\
+    Then at least one of the following indices must be zero
+    \[ \alpha_{\{t,u\},\{v,w\}} \, \quad \alpha_{\{t,v\},\{u,w\}} \, \quad \alpha_{\{t,w\},\{u,v\}} \nospblw \bigskip \]
+
+    In fact, suppose
+    \[ \max {\{ tu + vw, tv + uw, tw + uv \}} = tu + vw \]
+    then $\, \beta_{\{t,u\},\{v,w\}} = 0 \,$ and so $\, \alpha_{\{t,u\},\{v,w\}} = 0 \,$.
+
+    The other cases are analogous.
+\end{remark}
+
+\begin{definition}[weak compatibility]
+    Three splits $S_1,S_2,S_3$ of $X$ are \textbf{weakly compatible} \\
+    \bsp if there are no four points $\, t,u,v,w \in X \,$ such that
+    \[ S_1 \succcurlyeq \bigl\{ \{t,u\},\{v,w\} \bigr\}, \quad S_2 \succcurlyeq \bigl\{ \{t,v\},\{u,w\} \bigr\}, \quad S_3 \succcurlyeq \bigl\{ \{t,w\},\{u,v\} \bigr\} \]
+
+    A set of splits $\Sc$ of $X$ is \textbf{weakly compatible} \\
+    \bsp if its splits are (triplewise) weakly compatible.
+\end{definition}
+
+\begin{remark}
+    Subsets of weakly compatible sets are weakly compatible.
+\end{remark}
+
+\begin{proposition} \label{prop:dswc}
+    The set of all $d$-splits $\Sc_d(X)$ is weakly compatible.
+\end{proposition}
+\begin{proof}
+    Let $t,u,v,w \in X$. \\
+    From the previous remark we can suppose WLOG $\, \alpha_{\{t,u\},\{v,w\}} = 0 \,$.
+
+    For every split $S$ that extends $\bigl\{ \{t,u\},\{v,w\} \bigr\}$ we have
+    \[ 0 \leq \alpha_S \leq \alpha_{\{t,u\},\{v,w\}} = 0 \]
+    that implies $\alpha_S = 0$, that is $S$ is not a $d$-split. \\
+    In other words, there are no $d$-splits that extend $\bigl\{ \{t,u\},\{v,w\} \bigr\}$.
+\end{proof}
+
+\begin{theorem}[{\cites[Theorem 3]{BD92a}}] \label{teo:teo3}
+    Let $\Sc$ be a set of weakly compatible splits of $X$. \\
+    For each $S \in \Sc$, let $\lambda_S > 0$ and consider
+    \[ d \defeq \sum_{S \,\in\, \Sc} \lambda_S \cdot \delta_S \]
+
+    Then $\, \Sc = \Sc_d(X) \,$ and $\, \alpha_S = \lambda_S,\ \forall\, S \in \Sc \,$.
+\end{theorem}
+\begin{proof}
+    Notice that $d$ is a conical combination of split metrics \\
+    \bsp (which are pseudo-metrics), so it is a pseudo-metric.
+
+    Let $\{A,B\} \in \Sc$. \\
+    Thanks to \autoref{cor:aeqa}, pick $t,u \in A$ and $v,w \in B$ such that
+    \[ \alpha_{\{t,u\},\{v,w\}} = \aAB \]
+
+    Consider the sets
+    \begin{align*}
+        \Sc_0 &= \Bigl\{ S \in \Sc \mathrel{\Big|} S \succcurlyeq \bigl\{ \{t,u\},\{v,w\} \bigr\} \Bigr\} \\[5pt]
+        \Sc_1 &= \Bigl\{ S \in \Sc \mathrel{\Big|} S \succcurlyeq \bigl\{ \{t,v\},\{u,w\} \bigr\} \Bigr\} \\[5pt]
+        \Sc_2 &= \Bigl\{ S \in \Sc \mathrel{\Big|} S \succcurlyeq \bigl\{ \{t,w\},\{u,v\} \bigr\} \Bigr\}
+    \end{align*}
+
+\clearpage
+
+    If all three sets are non-empty, then there exist three splits \\
+    \bsp that violates the weak compatibility assumption. \\
+    So at least one of them is empty, say WLOG $\Sc_2$.
+    
+    All splits in $\, \Sc \setminus (\Sc_0 \cup \Sc_1 \cup \Sc_2) \,$  equally contribute to each \\
+    \bsp of the three distances $\, tu + vw,\, tv + uw,\, tw + uv \,$; \\
+    so we can ignore them in the calculation of the isolation index:
+    \begingroup \eqspace{0pt}{\bigskipamount}
+    \begin{align*}
+        \aAB &= \alpha_{\{t,u\},\{v,w\}} = \beta_{\{t,u\},\{v,w\}} = \\
+        &= \frac{1}{2}\, \Bigl( \max {\{ tu + vw,\, tv + uw,\, tw + uv \}} - tu - vw \Bigr) \\
+        &\mathcolor{red}{=} \max {\Biggl\{ 
+            \sum_{S \,\in\, \Sc_1 \,\cup\, \smallunderbrace{\scriptstyle\Sc_2}_{=\emptyset}}\!\!\! \lambda_S \,,
+            \sum_{S \,\in\, \Sc_0 \,\cup\, \smallunderbrace{\scriptstyle\Sc_2}_{=\emptyset}}\!\!\! \lambda_S \,,
+            \sum_{S \,\in\, \Sc_0 \,\cup\, \Sc_1}\!\! \lambda_S \Biggr\}}
+            - \sum_{S \,\in\, \Sc_1 \cup \smallunderbrace{\scriptstyle\Sc_2}_{=\emptyset}}\!\!\! \lambda_S \\
+        &= \sum_{S \,\in\, \Sc_0 \,\cup\, \Sc_1}\!\!\! \lambda_S \ 
+        - \sum_{S \,\in\, \Sc_1} \lambda_S \\
+        &= \sum_{S \,\in\, \Sc_0} \lambda_S \\
+        &\geq \lambda_{A,B} > 0
+    \end{align*}
+    \endgroup
+
+    So for every $S \in \Sc$ we have $\, \alpha_S \geq \lambda_S > 0 \,$ \\
+    \bsp and $S$ is a $d$-split, therefore $\, \Sc\subseteq\Sc_d(X) \,$.
+
+    Writing the canonical decompostion of $d$, we get
+    \begin{align*}
+        d &= d_0 + \sum_{S \,\in\, \Sc_d(X)} \alpha_S \cdot \delta_S \\
+        &\geq \sum_{S \,\in\, \Sc} \alpha_S \cdot \delta_S \\
+        &\geq \sum_{S \,\in\, \Sc} \lambda_S \cdot \delta_S = d
+    \end{align*}
+    where we used that $d_0 \geq 0$, since it is a pseudo-metric.
+    
+    So the inequalities hold as equal. Thus
+    \[ d_0 = 0 \,, \qquad \quad \bigg\{\!
+        \begin{array}{ll}
+            \alpha_S = \lambda_S \,,    & \ \forall\, S \in \Sc \\
+            \alpha_S = 0 \,,            & \ \text{otherwise}
+        \end{array}
+    \]
+    that is if $S \notin \Sc$, then $S$ is not a $d$-split.
+
+    We conclude that $\, \Sc = \Sc_d(X) \,$. \qedhere
+\end{proof}
+
+\begin{corollary}[{\cites[Corollary 4]{BD92a}}] \label{cor:cor4}
+    Let $\Sc$ be a set of weakly compatible splits of $X$.
+
+    Then the split metrics $\{\delta_S\}_{S \,\in\, \Sc}$ are linearly independent. \\[2pt]
+    Also $\, \card{\Sc} \leq \binom{n}{2} \,$, where $n = \card{X}$.
+\end{corollary}
+\begin{proof}
+    In order to prove the linear independence, suppose
+    \[ \sum_{S \,\in\, \Sc} \lambda_S \cdot \delta_S = 0 \]
+    for some $\lambda_S \in \R$ for each $S \in \Sc$.
+
+    Let
+    \begingroup \nospabv
+    \begin{align*}
+        \Sc^+ &\defeq \{\, S \in \Sc \mid \lambda_S > 0 \,\} \\
+        \Sc^- &\defeq \{\, S \in \Sc \mid \lambda_S < 0 \,\}
+    \end{align*}
+    \endgroup
+
+    We can decompose the previous expression in
+    \[ \sum_{S \,\in\, \Sc^+} \lambda_S \cdot \delta_S \ +\, \sum_{S \,\in\, \Sc^-} \lambda_S \cdot \delta_S = 0 \]
+
+    Consider the pseudo-metric
+    \[ d \defeq \sum_{S \,\in\, \Sc^+} \lambda_S \cdot \delta_S = \sum_{S \,\in\, \Sc^-} (- \lambda_S) \cdot \delta_S \]
+
+    Observe that both $\Sc^+$ and $\Sc^-$ are weakly compatible, \\
+    \bsp because subsets of $\Sc$ which is weakly compatible. \\
+    Applying \autoref{teo:teo3} to the first expression of $d$ we get
+    \[ \Sc^+ \mathcolor{blue}{=} \Sc_d(X) \]
+    and doing the same with the second expression we get
+    \[ \Sc^- \mathcolor{blue}{=} \Sc_d(X) \]
+    So $\, \Sc^+ = \Sc^- \,$.
+    But $\Sc^+$ and $\Sc^-$ are disjoint due to how they are defined.
+    So they are both empty: $\, \Sc^+ = \Sc^- = \emptyset \,$.
+
+    We conclude that $\, \lambda_S = 0,\ \forall\, S \in \Sc \,$. \\
+    Therefore the split metrics $\{\delta_S\}_{S \,\in\, \Sc}$ are linearly independent. \bigskip
+
+    Since $\, \delta_S \in M(X),\, \forall\, S \in \Sc \,$ and $\, \dim_\R \vspan{M(X)} = \binom{n}{2} \,$ then
+    \[ \card{\Sc} \,=\, \# \bigl\{ \delta_S \bigr\}_{S \,\in\, \Sc} \,\leq\, \binom{n}{2} \]
+\end{proof}
+
+\begin{remark}
+    Since $\Sc_d(X)$ is weakly compatible (\autoref{prop:dswc}), \\[1pt]
+    from \autoref{cor:cor4} we have that \\[1pt]
+    \bsp the number of $d$-splits is at most $\binom{n}{2} \,$.
+\end{remark} \bigskip \bigskip
+
+A brute force approach to find all the $d$-splits of $X$ would be to compute \\
+the isolation indices of all the splits of $X$ and discard those that are zero. \\[1pt]
+But, since $\, \card{\Sc(X)} = 2^{n-1} - 1 \,$, this is an exponential algorithm.
+
+We can instead use a more \squote{inductive} approach: \\
+suppose that the $\restr{d}{\YY}$-splits of a proper subset $Y \subset X$ of size $k$ \\[1pt]
+have already been determined. Then pick any $\, x \in X \setminus Y \,$  and check
+\begin{itemize}
+    \item if $\bigl\{ Y, \{x\} \bigr\}$ is a partial $d$-split
+    \item if $\bigl\{ A, B \cup \{x\} \bigr\}$ and $\bigl\{ A \cup \{x\}, B \bigr\}$ are partial $d$-split \\[2pt]
+    \bsp for any $\{A,B\}$ $d$-split of $Y$
+\end{itemize}
+
+In this way we obtain all the $d$-splits of $\, Y \cup \{x\} \,$.
+
+Crucially, we just have to check at most $\, 2 \cdot \binom{k}{2} + 1 \,$ splits at each step, \\
+\bsp thanks to the previous remark. \\
+So we can compute the $d$-splits of $X$ (and their decomposition) \\
+\bsp in polynomial time. \\
+In particular, this algorithm has complexity $O(n^6)$ \\
+\bsp (see \autoref{chap:p3c2} for the details of the calculation).
+
+\clearpage
+
+\begin{corollary}[{\cites[Corollary 5]{BD92a}}]
+    Let $\, d : \XX \to \R \,$ be a symmetric function.
+
+    Then the residue $d_0$ is linearly independent from $\{\delta_S\}_{S \,\in\, \Sc_d(X)}$. \\
+    In particular, if there are $\binom{n}{2}$ $d$-splits, then $d_0 = 0$.
+
+    If $d$ is a pseudo-metric, \\
+    \bsp then $d_0$ is linearly independent from $\, \{\delta_S\}_{S \,\in\, \Sc_d(X)} \cup \{\delta_x\}_{x \,\in\, X} \,$. \\
+    If there are $\, \binom{n}{2} - n \,$ non-trivial $d$-splits, then $d_0 = 0$.
+\end{corollary}
+\begin{proof}
+    Suppose that
+    \[ d_0 = \sum_{S \,\in\, \Sc_d(X)} \lambda_S \cdot \delta_S \]
+    so that
+    \begin{align*}
+        d &= d_0 + \sum_{S \,\in\, \Sc(X)} \alpha_S^d \cdot \delta_S \\
+        &= \sum_{S \,\in\, \Sc_d(X)} \lambda_S \cdot \delta_S + \sum_{S \,\in\, \Sc_d(X)} \alpha_S^d \cdot \delta_S \\
+        &= \sum_{S \,\in\, \Sc_d(X)} \bigl(\, \alpha_S^d + \lambda_S \,\bigr) \cdot \delta_S
+    \end{align*}
+
+    Let
+    \begingroup \nospabv
+    \begin{align*}
+        \Sc^+ &\defeq \{\, S \in \Sc_d(X) \mid \lambda_S \geq 0 \,\} \\
+        \Sc^- &\defeq \{\, S \in \Sc_d(X) \mid \lambda_S < 0 \,\}
+    \end{align*}
+    \endgroup
+    
+    Observe that $\, \Sc_d(X) = \Sc^+ \sqcup \Sc^- \,$.
+
+    Consider the pseudo-metric
+    \[ \dpr \defeq \sum_{S \,\in\, \Sc^+} \bigl(\, \alpha_S^d + \lambda_S \,\bigr) \cdot \delta_S + \sum_{S \,\in\, \Sc^-} \alpha_S^d \cdot \delta_S \]
+
+    Applying \autoref{teo:teo3} we get
+    \[ \alpha_S^\dpr = \bigg\{
+        \begin{array}{cl}
+            \alpha_S^d + \lambda_S \,,  & \quad S \in \Sc^+ \\
+            \alpha_S^d \,,              & \quad S \in \Sc^-
+        \end{array}
+    \]
+
+    We can write $\dpr$ as
+    \begin{align*}
+        \dpr &= \sum_{S \,\in\, \Sc^+} \bigl(\, \alpha_S^d + \lambda_S \,\bigr) \cdot \delta_S + \sum_{S \,\in\, \Sc^-} \bigl(\, \alpha_S^d + \lambda_S - \lambda_S \,\bigr) \cdot \delta_S \\
+        &= \sum_{S \,\in\, \Sc^+} \bigl(\, \alpha_S^d + \lambda_S \,\bigr) \cdot \delta_S + \sum_{S \,\in\, \Sc^-} \bigl(\, \alpha_S^d + \lambda_S \,\bigr) \cdot \delta_S - \sum_{S \,\in\, \Sc^-} \lambda_S \cdot \delta_S  \\
+        &= \sum_{S \,\in\, \Sc_d(X)} \bigl(\, \alpha_S^d + \lambda_S \,\bigr) \cdot \delta_S - \sum_{S \,\in\, \Sc^-} \lambda_S \cdot \delta_S \\
+        &= d - \sum_{S \,\in\, \Sc^-} \lambda_S \cdot \delta_S
+    \end{align*}
+    
+    Applying \autoref{teo:teo2} we get
+    \[ \alpha_S^\dpr = \bigg\{
+        \begin{array}{cl}
+            \alpha_S^d \,,              & \quad S \in \Sc^+ \\
+            \alpha_S^d - \lambda_S \,,  & \quad S \in \Sc^-
+        \end{array}
+    \]
+
+    Thus $\lambda_S = 0$ for every split S, proving the linear independence.
+    
+    The second assertion follows from \autoref{cor:cor4} applied to $\Sc_d(X)$ \\[1pt]
+    and the fact that $\, \dim_\R \vspan{M(X)} = \binom{n}{2} \,$. \bigskip \medskip
+
+    Consider
+    \[ d^* \defeq d + \sum_{x \,\in\, X} \delta_x \nospabv \nospblw \]
+
+    By \autoref{cor:cor2}, $\, (d^*)_0 = d_0 \,$. Also notice that
+    \[ \Sc_{d^*}(X) = \Sc_d(X) \cup \bigcup_{x \,\in\, X} \bigl\{ \{x\}, X \setminus \{x\} \bigr\} \]
+
+    We get the thesis by applying the first part to $d^*$.
+\end{proof}
+
+\clearpage
+
+\begin{definition}[trace]
+    Let $\Sc$ be a collection of splits of $X$ and $Y \subseteq X$ a subset of $X$.
+    
+    Then the \textbf{trace} of $\Sc$ on $Y$ is the set
+    \[ \restr{\Sc}{Y} \defeq \biggl\{ \{A \cap Y,\, B \cap Y\} \mathrel{\bigg{|}}
+        \begin{array}{c}
+             \{A,B\} \in \Sc, \\[2pt]
+             A \not\supseteq Y \ \text{and}\ B \not\supseteq Y
+        \end{array}
+    \biggr\} \]
+\end{definition}
+In practice, it is the collection of the restrictions of the splits of $\Sc$ to $Y$ \\
+\bsp such that they are still splits; in fact, the parts of a split cannot be empty. \\
+Since splits are partitions of $X$, \\
+\bsp this is equivalent to ask that $Y$ is not contained in neither part.
+
+\begin{remark}
+    Clearly $\, \Sc(Y) = \restr{\Sc(X)}{Y} \,$. \vspace{-3pt}
+    
+    Given a partial split $\{A,B\}$ of $Y$, we have $\, \aAB^d = \aAB^{\restr{d}{\YY}} \,$: \\[3pt]
+    \bsp in fact $d$ and $\restr{d}{\YY}$ coincide on $A \cup B$, since $A,B \subseteq Y$.
+    
+    For this reason, we may refer to the $\restr{d}{\YY}$-splits as $d$-splits of $Y$ \\
+    \bsp and indicate them with $\Sc_d(Y)$.
+
+    Moreover $\, \Sc_d(Y) \supseteq \restr{\Sc_d(X)}{Y} \,$, because by restricting \\[2pt]
+    \bsp the isolation index cannot get lower.
+\end{remark}
+
+% THIS IS FALSE!!!
+% \begin{proposition}
+%     The split-prime residue of the restriction coincides with \\
+%     the restriction of the split-prime residue
+%     \[ \bigl(\restr{d}{\YY}\bigr)_0 = \restr{d_0}{\YY} \,, \quad \forall\, Y \subseteq X \]
+% \end{proposition}
+% \begin{proof}
+%     Let $Y \subseteq X$. Restricting the canonical decomposition to $Y$ we get
+%     \begin{alignat*}{3}
+%         \restr{d}{\YY} &{}={}& \restr{d_0}{\YY} \,&{}+{}&&\! \sum_{S \,\in\, \Sc(X)} \alpha_S^d \cdot \restr{\delta_S}{\YY}
+%         \intertext{Instead, the canonical decomposition of the restriction is}
+%         \restr{d}{\YY} &{}={}& \bigl(\restr{d}{\YY}\bigr)_0 \,&{}+{}&&\! \sum_{S \,\in\, \Sc(Y)} \alpha_S^{\restr{d}{\YY}} \cdot \restr{\delta_S}{\YY}
+%     \end{alignat*}
+
+%     But the splits of $Y$ are the restriction of the splits of $X$ to $Y$ \\
+%     \bsp minus the splits such that one of the parts contains $Y$. \\
+%     For the latter, the split metrics restricted to $Y$ become the zero function, \\
+%     \bsp so we can ignore their splits in the sum of the first decomposition. \\
+%     Also, for the previous remark, the coefficients coincide. \\
+%     Thus the sums in the two decompositions coincide, \\
+%     \bsp therefore also the residues.
+% \end{proof}
+
+\begin{corollary}[{\cites[Corollary 6]{BD92a}}]
+    Let $\Sc$ and $\Tc$ be collections of weakly compatible splits of $X$.
+
+    Then $\Sc = \Tc$ if and only if \\
+    \bsp their traces are identical on every 4-subset of $X$.
+\end{corollary}
+\begin{proof}
+    The $(\Rightarrow)$ implication is obvious. \bigskip
+
+    Consider the pseudo-metrics \\
+    \bsp (since they are conical combinations of split metrics)
+    \[ d_1 \defeq \sum_{S \,\in\, \Sc} \delta_S \ , \qquad d_2 \defeq \sum_{T \,\in\, \Tc} \delta_T \]
+
+    Observe that, given $Y = \{t,u,v,w\}$ a 4-subset of $X$, we have
+    \[ \restr{d_1}{Y} = \restr{d_2}{Y} \]
+    because they depend only on the restriction of the split metrics on $Y$, \\
+    \bsp and $\Sc,\Tc$ have the same trace on 4-subsets.
+
+    If we consider a split of $Y$, for example $\bigl\{ \{t,u\},\{v,w\} \bigr\}$, \\
+    \bsp thanks to \autoref{prop:aeqb}, we have
+    \[ \alpha_{\{t,u\},\{v,w\}}^{d_1} \mathcolor{blue}{=} \beta_{\{t,u\},\{v,w\}}^{d_1} = \beta_{\{t,u\},\{v,w\}}^{d_2} \mathcolor{blue}{=} \alpha_{\{t,u\},\{v,w\}}^{d_2} \]
+    In particular, the isolation index on quartets is positive \\
+    \bsp with respect to $d_1$ if and only if it is positive with respect to $d_2$.
+
+    This is true also for generic splits because \\
+    \bsp the isolation index on a generic split is the minimum of \\
+    \bsp the isolation indices on appropriate quartets. \\
+    In particular, the $d_1$-splits coincide with the $d_2$-splits.
+    
+    By \autoref{teo:teo3} we have
+    \[ \Sc \mathcolor{blue}{=} \Sc_{d_1}(X) = \Sc_{d_2}(X) \mathcolor{blue}{=} \Tc \]
+\end{proof}
+
+\begin{proposition}
+    Let $\Sc$ be a collection of weakly compatible splits of $X$.
+
+    Then for every $S \in \Sc$ there exists a partial split $\bigl\{ \{t,u\},\{v,w\} \bigr\}$ \\
+    \bsp such that $S$ is its unique split extension in $\Sc$.
+\end{proposition}
+\begin{proof}
+    Let $S \in \Sc$ and $\bigl\{ \{t,u\},\{v,w\} \bigr\}$ such that
+    \[ \alpha_S^d = \beta_{\{t,u\},\{v,w\}}^d \]
+    with respect to the pseudo-metric $\, d = \sum_{S \,\in\, \Sc} \delta_S \,$.
+
+    Since by \autoref{teo:teo3} it holds $\Sc = \Sc_d(X)$, then $S$ is a $d$-split. \\
+    Applying \autoref{cor:cor1} we conclude that $S$ is the unique $d$-split \\[1pt]
+    \bsp (that is equivalent to saying element of $\Sc$) extending $\bigl\{ \{t,u\},\{v,w\} \bigr\}$.
+\end{proof}
+
+\end{document}

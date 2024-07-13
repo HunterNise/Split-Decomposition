@@ -1,0 +1,43 @@
+\documentclass[./main.tex]{subfiles}
+\begin{document}
+\ifSubfilesClassLoaded{\mainmatter}{}
+
+\altchapter{Conclusion} \label{chap:concl}
+
+In the previous chapters we studied the theory of split decomposition which is the foundation for the split decomposition method.\bigskip
+
+We now want to mention possible directions that deserve further investigation:
+\begin{itemize}
+    \item further explore the fundamentals about distance functions (especially pseudo-metrics), in particular
+    \begin{itemize}
+        \item geometric properties of the cone $M(X)$, see also \cite{Avi80,Avi81,AD91}
+        \item relationships with $(0,1)$-matrices, see also \cite{Ans80}
+        \item relationships with graph theory (metrics induced by graphs, graph embeddability, tree realizability etc.), see also \cite{IS72,Mul82,SPZ82}
+    \end{itemize}
+    
+    \item further study the properties of split networks, in particular
+    \begin{itemize}
+        \item characterize maximal sets of splits that possess desirable properties (like being representable as low-dimensional networks)
+        \item what happens if substitute splits with multi-splits, \\
+        that is (non necessarily binary) graph cuts?
+    \end{itemize}
+
+    \item further study possible application of numerical linear algebra (after all, our distance function is just a matrix)
+    \begin{itemize}
+        \item one notable mention in this direction is a recent publication about NeighborNet \cite{BH23}
+    \end{itemize}
+
+    \clearpage
+
+    \item further explore the effect of perturbations of the input matrix on these methods, in particular
+    \begin{itemize}
+        \item there are some results about trees in $\infty$-norm, for example in \\
+        \cites[§7.7]{SS03}[§10.2]{DHKMS12}; what about other norms?
+        \item to what extent we can consider the residue of the split decomposition as error/noise?
+        \item this area seems related to the topic of self-correcting codes, \\
+        there may be some interesting connections
+    \end{itemize}
+    
+\end{itemize}
+
+\end{document}

@@ -1,0 +1,65 @@
+\makeatletter
+
+% abbreviations
+
+\newcommand*{\XX}{{X \times X}}
+\newcommand*{\YY}{{Y \times Y}}
+\newcommand*{\dAB}{\delta_{A,B}}
+\newcommand*{\aAB}{\alpha_{A,B}}
+\newcommand*{\dpr}{{d^{\,\prime}}}
+\newcommand*{\Sc}{{\mathcal{S}}}
+\newcommand*{\Tc}{{\mathcal{T}}}
+
+
+% caption style
+
+\captionsetup[figure]{
+    justification   = raggedright,
+    singlelinecheck = false,
+    font            = small
+}
+
+\captionsetup[algorithm]{
+    justification   = raggedright,
+    singlelinecheck = false,
+    labelfont       = bf
+}
+
+
+% code style
+
+\setminted{
+    linenos     = true,
+    frame       = single,
+    framesep    = 10pt,
+    tabsize     = 4,
+    fontfamily  = courier,
+    fontsize    = \small
+}
+\usemintedstyle{vs}
+
+\renewcommand{\theFancyVerbLine}{%
+    \sffamily%
+    \textcolor[rgb]{0.66, 0.66, 0.66}%
+    {\small\arabic{FancyVerbLine}}%
+}
+
+
+% citation style
+
+\renewcommand{\mkbegdispquote}[2]{%
+    \setlength{\parindent}{15pt}%
+    \setlength{\parskip}{0pt}%
+    \em%
+}
+\renewcommand{\mkcitation}[1]
+    { \phantom{xxx}\upshape\hfill-- #1}
+
+
+% bibliography
+
+\defbibfilter{papers}{%
+  \type{article} \or \type{incollection} \or \type{inproceedings}
+}
+
+\makeatother

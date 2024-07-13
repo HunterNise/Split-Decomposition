@@ -1,0 +1,481 @@
+\documentclass[./main.tex]{subfiles}
+\begin{document}
+\ifSubfilesClassLoaded{\mainmatter}{}
+
+\chapter{Preliminaries} \label{chap:p2c1}
+
+Let $X$ be a set.
+
+\begin{definition}[pseudo-metric]
+    A function $\, d : \XX \to \R \,$ is a \textbf{pseudo-metric} on $X$ if
+    \begin{itemize}
+        \item $d(x,x) = 0 \,,$                  \tabto*{15em} $\forall\, x \in X$
+        \item $d(x,y) \leq d(x,z) + d(y,z) \,,$ \tabto*{15em} $\forall\, x,y,z \in X$
+    \end{itemize}
+    that is, it vanishes on the diagonal $\, \Delta_X = \{\, (x,y) \in \XX \mathrel{|} x = y \,\} \,$ \\
+    and it satisfies the triangle inequality.
+\end{definition}
+
+\begin{definition}[metric]
+    A function $\, d : \XX \to \R \,$ is a \textbf{metric} on $X$ if
+    \begin{itemize}
+        \item $d(x,y) = 0 \,\iff\, x = y \,,$   \tabto*{15em} $\forall\, x,y \in X$
+        \item $d(x,y) \leq d(x,z) + d(y,z) \,,$ \tabto*{15em} $\forall\, x,y,z \in X$
+    \end{itemize}
+    In particular, a metric is a pseudo-metric that vanishes \underline{only} on the diagonal.
+\end{definition}
+
+\clearpage
+
+\begin{proposition}
+    If $\, d : \XX \to \R \,$ is a pseudo-metric, then
+    \begin{itemize}
+        \item $d(x,y) = d(y,x) \,,$  \tabto*{10em} $\forall\, x,y \in X$
+        \item $d(x,y) \geq 0 \,,$    \tabto*{10em} $\forall\, x,y \in X$
+    \end{itemize}
+    that is, it is a symmetric and non-negative function.
+\end{proposition}
+\begin{proof}
+    From triangle inequality on $\, x,y,x \,$ and on $\, y,x,y \,$
+    \begin{alignat*}{2}
+        d(x,y) &\,\leq\, \cancel{d(x,x)} &&\,+\, d(y,x) \\
+        d(y,x) &\,\leq\, \cancel{d(y,y)} &&\,+\, d(x,y)
+    \end{alignat*}
+    that implies $\, d(x,y) = d(y,x) \,$.\bigskip
+
+    From triangle inequality on $\, x,x,y \,$
+    \[ 0 = d(x,x) \leq d(x,y) + d(x,y) = 2\,d(x,y) \]
+    that implies $\, d(x,y) \geq 0 \,$.
+\end{proof}
+
+\Hrule
+
+Let $V$ be a vector space over $\R$.
+
+\begin{definition}[convex set]
+    A subset $\, C \subseteq V \,$ is \textbf{convex} if $\, \forall\, v,w \in C \,$
+    \[ (1-\lambda)v + \lambda w \in C \,, \quad \forall\, \lambda \in [0,1] \nospblw \]
+\end{definition}
+
+\begin{definition}[(linear) cone]
+    A subset $\, C \subseteq V \,$ is a \textbf{(linear) cone} if
+    \[ v \in C \ \implies\ \lambda v \in C, \quad \forall\, \lambda \geq 0 \nospblw \]
+\end{definition}
+
+\begin{notation}
+    \begin{fleqn} \equp
+    \begin{alignat*}{2}
+        \R^\XX &\defeq \{\, f &&: \XX \to \R \mathrel{|} f\ \text{function} \,\} \\
+        M(X) &\defeq \{\, d &&: \XX \to \R \mathrel{|} d\ \text{pseudo-metric} \,\} \subseteq \R^\XX
+    \end{alignat*}
+    \end{fleqn}
+\end{notation}
+
+\begin{fact}
+    $\R^\XX$ is a (real) vector space. 
+\end{fact}
+
+\begin{proposition}
+    $M(X)$ is a convex cone.
+\end{proposition}
+\begin{proof}
+    Let $\, d \in M(X) \,$ pseudo-metric on $X$ and $\lambda \geq 0 \,$. Then
+    \begin{itemize}
+        \item $d(x,x) = 0 \ \implies\ \lambda d(x,x) = 0 \,, \quad \forall\, x \in X$
+        \item \onehalfspacing
+          $ d(x,y) \leq d(x,z) + d(y,z) \ \implies\ \\
+            \Bsp{\qquad} \lambda d(x,y) \leq \bigl( d(x,z) + d(y,z) \bigr) = \lambda d(x,z) + \lambda d(y,z) \,, \\
+            \Bsp{\qquad\qquad} \forall\, x,y,z \in X $
+    \end{itemize}
+    So $\lambda d$ is a pseudo-metric, $\, \lambda d \in M(X) \,$, and $M(X)$ is a cone.\bigskip
+    
+    To show that $M(X)$ is convex, \\[2pt]
+    \bsp we need to show that $\, \forall\, d_1, d_2 \in M(X) \,$
+    \[ (1-\lambda) d_1 + \lambda d_2 \in M(X) \,, \quad \forall\, \lambda \in [0,1] \nospblw \]
+    
+    But since $M(X)$ is a cone,
+    \[ (1-\lambda) d_1 \in M(X) \quad \text{and} \quad \lambda d_2 \in M(X) \]
+    so it suffice to show that $M(X)$ is closed under addition.
+
+    Let $\, d_1, d_2 \in M(X) \,$. Then
+    \begin{itemize}
+        \item $(d_1 + d_2)(x,x) = \underbrace{d_1(x,x)}_{=\,0} + \underbrace{d_2(x,x)}_{=\,0} = 0 \,, \quad \forall\, x \in X$
+        \item \onehalfspacing
+          $ (d_1 + d_2)(x,y) = d_1(x,y) + d_2(x,y) \leq \\
+            \Bsp{\quad} \leq d_1(x,z) + d_1(y,z) + d_2(x,z) + d_2(y,z) = \\
+            \Bsp{\quad} = d_1(x,z) + d_2(x,z) + d_1(y,z) + d_2(y,z) = \\
+            \Bsp{\quad} = (d_1 + d_2)(x,z) + (d_1 + d_2)(y,z) \,, \quad \forall\, x,y,z \in X $
+    \end{itemize}
+    So $d_1 + d_2$ is a pseudo-metric in $X$.
+\end{proof}
+
+\clearpage
+
+\begin{remark}
+    The set of all metrics is also a non-pointed convex cone \\
+    \bsp (same definition of cone but with $\lambda > 0 \,$): \\
+    in fact, the zero function is not a metric.
+\end{remark}\bigskip\medskip
+
+Let us consider $\R^\XX$ with the topology of pointwise convergence $\tau_p \,$.
+
+\begin{proposition}
+    If $X$ is countable\footnotemark, then $M(X)$ is closed in $\bigl( \R^\XX, \tau_p \bigr) \,$.
+    
+    \footnotetext{Here countable means finite or countably infinite (\textit{al più numerabile}).}
+\end{proposition}
+\begin{proof}
+    Let us show that $M(X)$ is sequentially closed.
+
+    Let us consider a convergent sequence of pseudo-metrics
+    \[ d_n \to \overline{d}\ , \qquad d_n \in M(X),\ \forall\, n \in \N \]
+    and let us show that the limit is also a pseudo-metric,
+    \[ \overline{d} \in  M(X) \nospblw \]
+    
+    For the characterization of the pointwise convergence,
+    \[ d_n \to \overline{d} \quad \iff \quad  d_n(\bm{x}) \to \overline{d}(\bm{x}), \quad \forall\, \bm{x} \in \XX \nospblw \]
+    
+    Now for every $\, \bm{x} \in \XX \,$, \\[2pt]
+    \bsp $\{ d_n(\bm{x}) \}_{n \in \N} \,$ is a real-valued sequence, so $\, \forall\, x,y,z \in X \,$
+    \begin{itemize}
+        \item $\displaystyle d_n(x,x) = 0,\ \forall\,n \in \N \quad \implies \quad \lim_{n \,\to\, +\infty} d_n(x,x) = \overline{d}(x,x) = 0$
+        \item \begin{fleqn} \equp
+        \begin{alignat*}{3}
+            d_n(x,y) &{}\leq{}& d_n(x,z) &{}+{}& d_n(y,z) &,\ \forall\, n \in \N \,, \quad \text{so in the limit} \\
+            \overline{d}\,(x,y) &{}\leq{}& \overline{d}\,(x,z) &{}+{}& \overline{d}\,(y,z)&
+        \end{alignat*}
+        \end{fleqn}
+    \end{itemize}\vspace{-\parskip}
+    This shows that $\overline{d}$ is a pseudo-metric and $M(X)$ is sequentially closed.
+    
+    Since $X$ is countable (and so is $\XX$), the space $\R^\XX = \prod_{\bm{x} \in \XX} \R$ \\
+    \bsp is a countable product of first-countable spaces (namely $\R$), \\ so it is first-countable itself.
+
+    Now $M(X)$ is sequentially closed in a first-countable space, \\
+    \bsp so it is closed.
+\end{proof}
+
+\begin{remark}
+    If $X$ is uncountable, \\
+    \bsp then we cannot conclude that $\R^\XX$ is first-countable.
+\end{remark}
+
+\begin{remark}
+    In the same hypothesis, \\
+    \bsp the set of metrics is not even sequentially closed in $\bigl( \R^\XX, \tau_p \bigr) \,$.\bigskip
+    
+    In fact, let us consider a convergent sequence of metrics such that
+    \[ d_n \to \overline{d} \quad \text{and} \quad d_n(\bm{x}) = \frac{1}{n},\ n \in \N \]
+    for some $\, \bm{x} \in (\XX) \setminus \Delta_X \,$. Then
+    \[ \overline{d}(\bm{x}) = \lim_{n \,\to\, + \infty} d_n(\bm{x}) = 0 \eqspace{2pt}{0pt} \]
+    but $\bm{x} \notin \Delta_X$, so $\overline{d}$ is not a metric.
+\end{remark}
+
+\vspace{\baselineskip} \Hrule
+
+From now on we will assume $X$ finite of cardinality $n$. \\[2pt]
+We may sometimes identify $X$ with $\{ 1, \dots, n \}$, since they are in bijection.
+
+\begin{remark}
+    Sometimes it is useful to think of functions $\, d : \XX \to \R \,$, \\
+    that is $d \in \R^\XX$, as real-valued square matrices $\, D \in M(n,\R) \,$.
+    
+    In particular, a pseudo-metric corresponds to a symmetric matrix, with 0 on the diagonal, non-negative entries elsewhere \\
+    and such that the elements satisfy the triangle inequality.
+\end{remark}
+
+\clearpage
+
+
+Let us consider a real vector space $V$.
+
+\begin{definition}[conic/conical combination]
+    A point $v \in V$ is a \textbf{conical combination} of $\, v_1, \dots, v_k \in V \,$ if
+    \[ \exists\ \lambda_1, \dots, \lambda_k \geq 0 \quad \text{such that} \quad v = \lambda_1 v_1 + \dots + \lambda_k v_k \nospblw \]
+\end{definition}
+
+\begin{definition}[extreme/extremal ray]
+    An \textbf{extreme ray} of a cone $C \subseteq V$ is a subset $S \subseteq C$ of the form
+    \[ S = \{\, \lambda r \mathrel{|} \lambda \geq 0 \,\} \]
+    for some $\, r \in C \setminus \{0\} \,$, such that the elements of $S$ cannot be expressed as \\
+    finite conical combinations of elements of $\, C \setminus S \,$ ;
+    
+    or equivalently, for every $\, v_1, \dots, v_k \in C \,$ and $\, \lambda_1, \dots, \lambda_k \geq 0 \,$
+    \[ \lambda_1 v_1 + \dots + \lambda_k v_k \in S \quad \implies \quad \exists\ i \in \{ 1, \dots, k \} \,:\, v_i \in S \nospblw \]
+    
+    or equivalently, for every $\, v,w \in C \,$
+    \[ v + w \,\in\, S \quad \implies \quad v \in S \quad \text{or} \quad w \in S \]
+\end{definition}
+
+We can identify an extreme ray with the associated vector $r$.
+
+\begin{definition}[simplicial cone]
+    A cone $C \subseteq V$ is a simplicial cone if every complete\footnotemark\ set of representatives of the extreme rays is linearly independent;
+    
+    or equivalently, if
+    \[ \#\,\{\text{extreme rays}\} = \dim_\R \vspan{C} \]
+    where $\vspan{C}$ is the vector subspace spanned by $C$.
+    
+    \footnotetext{This is to be understood as every vector corresponds to an extreme ray \\
+    \bsp and no two vectors correspond to the same extreme ray.}
+\end{definition}
+
+\clearpage
+
+\begin{definition}[split metric]
+    Given a partition (or split) of $X$ into two disjoint non-empty sets $A$ and $B$, \\[2pt]
+    we call \textbf{split metric}\footnotemark\ of $\{A,B\}$ the function $\, \dAB : \XX \to \R \,$ defined by
+    \[ \dAB\,(x,y) \defeq
+        \begin{cases}
+        \, 0 \,,    & \text{if}\ x,y \in A\ \text{or}\ x,y \in B \\
+        \, 1 \,,    & \text{otherwise}
+        \end{cases} \nospblw \]
+    
+    \footnotetext{Other authors call them cut metrics, binary metrics or binary dissimilarities.}
+\end{definition}
+In other words $\dAB$ equals $1$ on elements that are separated by the split/cut \\[2pt]
+given by $\{A,B\}$, and equals $0$ on the elements that belong to the same \squote{side}.
+
+\begin{notation}
+    If $a \in X$, we denote the \textbf{trivial split metric}
+    \[ \delta_a \defeq \delta_{\,\{a\},\, X \setminus \{a\}} \nospblw \]
+\end{notation}\vspace{-\baselineskip}
+
+\begin{proposition}
+    The split metrics are pseudo-metrics.
+\end{proposition}
+\begin{proof}
+    Let us fix a split $\{A,B\}$ of $X$ and let us show that $\, \dAB \in M(X) \,$. \\
+    The vanishing on the diagonal is obvious.
+
+    Let us show the triangle inequality.
+    \begin{itemize}[noitemsep]
+        \item $x,y,z \in A$
+        \[ \underbrace{\dAB(x,y)}_{0} \,\leq\, \underbrace{\dAB(x,z)}_{0} \,+\, \underbrace{\dAB(y,z)}_{0} \nospblw \nospabv \]
+        \item $x,y \in A,\ z \in B$
+        \[ \underbrace{\dAB(x,y)}_{0} \,\leq\, \underbrace{\dAB(x,z)}_{1} \,+\, \underbrace{\dAB(y,z)}_{1} \nospblw \]
+        \item $x,z \in A,\ y \in B$
+        \[ \underbrace{\dAB(x,y)}_{1} \,\leq\, \underbrace{\dAB(x,z)}_{0} \,+\, \underbrace{\dAB(y,z)}_{1} \nospblw \]
+        \item $x \in A,\ y,z \in B$
+        \[ \underbrace{\dAB(x,y)}_{1} \,\leq\, \underbrace{\dAB(x,z)}_{1} \,+\, \underbrace{\dAB(y,z)}_{0} \nospblw \]
+    \end{itemize}
+    Analogous cases switching $A$ and $B$. \qedhere
+\end{proof}
+
+\begin{lemma} \label{lemma:dzdeq}
+    If $d$ is a pseudo-metric, then for every $\, x,y,z \in X \,$
+    \[ d(x,y) = 0 \quad \implies \quad d(x,z) = d(y,z) \nospblw \]
+\end{lemma}\vspace{-\baselineskip}
+\begin{proof}
+    We have the following triangle inequalities
+    \[ \begin{cases}
+        \ d(x,y) \,\leq\, d(x,z) + d(y,z) \\
+        \ d(x,z) \,\leq\, \cancel{d(x,y)} + d(y,z) \\
+        \ d(y,z) \,\leq\, \cancel{d(x,y)} + d(x,z)
+        \end{cases} \]
+    From the last two we get the double inequality, hence the thesis.
+\end{proof}\vspace{-\baselineskip}
+
+\begin{notation}
+    For every split $\{A,B\}$ of $X$, we define
+    \[ \Gamma_{A,B} \defeq \bigl\{\, \gamma \in M(X) \mathrel{\big|} \gamma(x,y) = 0\ \ \text{if}\ x,y \in A\ \text{or}\ x,y \in B \,\bigr\} \nospblw \]
+\end{notation}
+These are the pseudo-metrics that vanish \\
+\bsp where the split metric $\dAB$ vanishes (the other entries can be anything).
+
+\begin{lemma} \label{lemma:extray}
+    These pseudo-metrics are multiples of the relative split metric
+    \[ \gamma \in \Gamma_{A,B} \quad \implies \quad \exists\, \lambda \geq 0\ :\ \gamma = \lambda \dAB \]
+    or in other words
+    \[ \Gamma_{A,B} = \{\, \lambda \dAB \mathrel{|} \lambda \geq 0 \,\} = \mathrm{cone}\, (\dAB) \nospblw \]
+\end{lemma}\vspace{-\baselineskip}
+\begin{proof}
+    Let us fix $a_0 \in A$. \\
+    Since $\, \forall\, b,b^\prime \in B,\ \gamma(b,b^\prime) = 0 \,$, from \autoref{lemma:dzdeq} we have
+    \[ \gamma(a_0,b) = \gamma(a_0,b^\prime) \,, \quad \forall\, b,b^\prime \in B \]
+
+    Symmetrically, for $b_0 \in B$ we have
+    \[ \gamma(b_0,a) = \gamma(b_0,a^\prime) \,, \quad \forall\, a,a^\prime \in A \]
+
+    Thus $\, \gamma(a,b) = \gamma(a^\prime,b^\prime) \,,\ \ \forall\, a,a^\prime \in A,\ \forall\, b,b^\prime \in B \,$. Call this value $\lambda$. \\
+    Since $\gamma$ vanishes on all the other couples (because $\dAB$ does), then
+    \[ \gamma = \lambda \dAB \nospblw \qedhere \]
+\end{proof}
+
+\begin{proposition}
+    The split metrics are extreme rays of $M(X)$.\,\footnotemark
+
+    \footnotetext{For this reason, they may be also called extremal metrics.}
+\end{proposition}
+\begin{proof}
+    Let us consider a split $\{A,B\}$ and the associated split metric $\dAB \,$.
+
+    From the previous \autoref{lemma:extray} we have
+    \[ \Gamma_{A,B} = \{\, \lambda \dAB \mathrel{|} \lambda \geq 0 \,\} \nospblw \]
+    so we need to show
+    \[ \gamma_1 + \gamma_2 \,\in\, \Gamma_{A,B} \quad \implies \quad \gamma_1 \in \Gamma_{A,B}\ \ \text{or}\ \ \gamma_2 \in \Gamma_{A,B} \]
+
+    Suppose $\, \gamma_1 + \gamma_2 = \lambda \dAB \,$. Then for every $a,a^\prime \in A$
+    \[ \gamma_1(a,a^\prime) + \gamma_2(a,a^\prime) = \lambda \dAB(a,a^\prime) = 0 \eqspace{2pt}{0pt} \]
+    but since $\gamma_1, \gamma_2$ are non-negative, we have
+    \[ \gamma_1(a,a^\prime) = \gamma_2(a,a^\prime) = 0 \]
+
+    Idem for every $b,b^\prime \in B$.
+
+    Thus $\gamma_1$ and $\gamma_2$ vanish where $\dAB$ vanishes, that is
+    \[ \gamma_1 \in \Gamma_{A,B}\ \ \,\text{and}\ \ \gamma_2 \in \Gamma_{A,B} \nospblw \] \qedhere
+\end{proof}
+
+\begin{remark}
+    The number of split metrics is $\, 2^{n-1} - 1 \,$.\bigskip
+
+    In fact, the set of split metrics is in bijection with the set of splits of $X$. In creating a split, for every element of $X$ we have two choices: put it in $A$ or put it in $B$.
+
+    We have $2^n$ possible arrangements. We need to subtract the cases corresponding to $(\emptyset,X)$ and $(X,\emptyset)$, and divide by two, \\
+    since the split $\{A,B\}$ is the same as $\{B,A\}$.
+
+    In the end we get
+    \[ \frac{2^n-2}{2} = 2^{n-1} - 1 \nospblw \]
+\end{remark}
+
+\begin{lemma} \label{lemma:epssplit}
+    The functions $\, \varepsilon_{ij} : \XX \to \R \,,\ i \neq j \in X \,$ defined by
+    \[ \varepsilon_{ij}(\bm{x}) =
+        \begin{cases}
+        \, 1 \,,    & \text{if}\ \bm{x} = (i,j)\ \text{or}\ \bm{x} = (j,i) \\
+        \, 0 \,,    & \text{otherwise}
+        \end{cases} \]
+    can be expressed as linear combinations of the split metrics.
+\end{lemma}
+\begin{proof}
+    Consider the function given by $\, \delta_{i} + \delta_{j} - \delta_{ij} \,$, where
+    \[ \delta_{i} \defeq \delta_{\, \{i\},\, X \setminus \{i\}}\ , \quad 
+        \delta_{j} \defeq \delta_{\, \{j\},\, X \setminus \{j\}}\ , \quad 
+        \delta_{ij} \defeq \delta_{\, \{i,j\},\, X \setminus \{i,j\}} \]
+
+    Let us divide in cases (up to symmetry):
+    \begin{itemize}[noitemsep]
+        \item $(i,j)$
+        \[ \underbrace{\delta_{i}(i,j)}_{1} \,+\, \underbrace{\delta_{j}(i,j)}_{1} \,-\, \underbrace{\delta_{ij}(i,j)}_{0} \,=\, 2 \]
+        \item $(i,y)$ with $y \neq j$
+        \[ \underbrace{\delta_{i}(i,y)}_{1} \,+\, \underbrace{\delta_{j}(i,y)}_{0} \,-\, \underbrace{\delta_{ij}(i,y)}_{1} \,=\, 0 \]
+        \item $(x,j)$ with $x \neq i$
+        \[ \underbrace{\delta_{i}(x,j)}_{0} \,+\, \underbrace{\delta_{j}(x,j)}_{1} \,-\, \underbrace{\delta_{ij}(x,j)}_{1} \,=\, 0 \]
+        \item $(x,y)$ with $(x,y) \neq (i,j)$
+        \[ \underbrace{\delta_{i}(x,y)}_{0} \,+\, \underbrace{\delta_{j}(x,y)}_{0} \,-\, \underbrace{\delta_{ij}(x,y)}_{0} \,=\, 0 \]
+    \end{itemize}
+    Thus this function coincide with $2\, \varepsilon_{ij}\,$, from which
+    \[ \varepsilon_{ij} = \frac{1}{2}\, \delta_{i} + \frac{1}{2}\, \delta_{j} - \frac{1}{2}\, \delta_{ij} \nospblw \]
+\end{proof}
+
+\clearpage
+
+\begin{proposition}
+    $\vspan{M(X)}$ is a vector subspace of $\R^\XX$ with the following properties:
+    \begin{itemize}
+        \item $\vspan{M(X)} = \bigg\{\, f : \XX \to \R\ \mathrel{\bigg|}
+            \begin{array}{c}
+                 f(x,y) = f(y,x),\ \forall\, x,y \in X \\
+                 \text{and}\ f(x,x) = 0,\ \forall\, x \in X
+            \end{array}
+         \bigg\}$
+         \item $\displaystyle \dim_\R \vspan{M(X)} = \binom{n}{2}$
+    \end{itemize}
+\end{proposition}
+\begin{proof}
+    Let us indicate the set of symmetric functions vanishing on the diagonal with $S_0(X)$.
+    
+    It is clear that $M(X) \subseteq S_0(X)$ and $S_0(X)$ is closed under linear combinations. So $\vspan{M(X)} \subseteq S_0(X)$.
+    
+    Notice that $\{\varepsilon_{ij}\}_{\, i < j}$ is a basis for $S_0(X)$. \\[2pt]
+    In fact, the functions in $S_0(X)$ can be represented as symmetric matrices with zeroes on the diagonal; while the function $\varepsilon_{ij}$ can be represented as a symmetric matrix with $1$ in positions $(i,j)$ and $(j,i)$, and zeroes elsewhere.
+    
+    This also shows that
+    \[ \dim_\R S_0(X) \,=\, \#\,\{\varepsilon_{ij}\}_{\, i < j} \,=\, \binom{n}{2} \nospblw \]
+
+    From the previous \autoref{lemma:epssplit} we can express the functions $\{\varepsilon_{ij}\}_{\, i < j}$ as linear combinations of split metrics, thus the same holds for every function in $S_0(X) \,$; that is $S_0(X) \subseteq \vspan{M(X)}$.
+\end{proof}
+
+\begin{remark}
+    For $n = 2$, say $X = \{a,b\}$, all the pseudo-metrics are multiple of the only split metric $\delta_{\{a\},\{b\}} \,$; \\[5pt]
+    so $M(X)$ is just a one-dimensional ray.
+\end{remark}
+
+\begin{remark}
+    For $n = 3$, say $X = \{a,b,c\}$, the split metrics
+    \[ \delta_a \defeq \delta_{\{a\},\{b,c\}} \,, \quad \delta_b \defeq \delta_{\{b\},\{a,c\}} \,, \quad \delta_c \defeq \delta_{\{c\},\{a,b\}} \]
+    generate the cone $M(X)$.\bigskip
+
+    In fact, let us consider a pseudo-metric $d \in M(X)$; \\
+    then we want to show that $\, \exists\, \lambda, \mu, \nu \geq 0 \,$ such that
+    \[ d = \lambda \delta_a + \mu \delta_b + \nu \delta_c \nospblw \]
+
+    In particular, by evaluating
+    \begin{align*}
+        d_{a,b} \defeq&\ d(a,b) = \\
+                =&\ \lambda \delta_{\{a\},\{b,c\}}(a,b) + \mu \delta_{\{b\},\{a,c\}}(a,b) + \nu \delta_{\{c\},\{a,b\}}(a,b) = \\
+                =&\ \lambda \cdot 1 + \mu \cdot 1 + \nu \cdot 0 = \\
+                =&\ \lambda + \mu
+    \end{align*}
+    and analogously for the other couples, \\
+    we get the following system of equations
+    \[ \begin{cases}
+        \ d_{ab} = \lambda + \mu \\
+        \ d_{ac} = \lambda + \nu \\
+        \ d_{bc} = \mu + \nu
+        \end{cases} \]
+
+    Solving for $\lambda, \mu, \nu$ we get
+    \begin{align*}
+        \lambda &= \frac{\phantom{-} d_{ab} + d_{ac} - d_{bc}}{2} \\[5pt]
+        \mu     &= \frac{\phantom{-} d_{ab} - d_{ac} + d_{bc}}{2} \\[5pt]
+        \nu     &= \frac{- d_{ab} + d_{ac} + d_{bc}}{2}
+    \end{align*}
+
+    Moreover, from triangle inequality on $d$, we have $\lambda, \mu, \nu \geq 0 \,$. \\
+    This shows that these split metrics are the only extreme rays \\
+    (every other pseudo-metric is a conical combination of them).
+
+    The same calculation also shows that the split metrics are \\
+    linearly independent in $\vspan{M(X)}$. In fact, if
+    \[ \lambda \delta_a + \mu \delta_b + \nu \delta_c = \bm{0} \]
+    where $\bm{0}$ is the identically zero pseudo-metric, then
+    \[ \lambda = 0, \quad \mu = 0, \quad \nu = 0 \nospblw \]
+
+    In particular, for $n = 3$ the decomposition in split metrics is unique.
+\end{remark}
+
+\begin{remark}
+    For $n \geq 4$, the decomposition in split metrics is \underline{not} necessarily unique. \bigskip
+
+    Consider $X = \{a,b,c,d\}$ and its split metrics
+    \[ \delta_{\{a\},\{b,c,d\}} \qquad \delta_{\{b\},\{a,c,d\}} \qquad \delta_{\{c\},\{a,b,d\}} \qquad \delta_{\{d\},\{a,b,c\}} \]
+    \[ \delta_{\{a,b\},\{c,d\}} \qquad \delta_{\{a,c\},\{b,d\}} \qquad \delta_{\{a,d\},\{b,c\}} \]
+
+    Then the pseudo-metric $d$ defined by
+    \[ d(x,y) \defeq
+        \begin{cases}
+        \, 2 \,,    & \text{if}\ x \neq y \\
+        \, 0 \,,    & \text{if}\ x = y
+        \end{cases} \nospblw \]
+    can be expressed as
+    \[ d = \delta_{\{a\},\{b,c,d\}} + \delta_{\{b\},\{a,c,d\}} + \delta_{\{c\},\{a,b,d\}} + \delta_{\{d\},\{a,b,c\}} \]
+    as well as
+    \[ d = \delta_{\{a,b\},\{c,d\}} + \delta_{\{a,c\},\{b,d\}} + \delta_{\{a,d\},\{b,c\}} \nospabv \nospblw \]
+\end{remark}
+
+\begin{remark}
+    $M(X)$ is a simplicial cone if and only if $n = 2,3 \,$. In fact,
+    \[ \#\,\{\text{extreme rays}\} \ \geq\ \#\,\{\text{split metrics}\} \ =\ 2^{n-1} - 1 \]
+    and for $n \geq 4$ this last number is greater than
+    \[ \dim_\R \vspan{M(X)} = \binom{n}{2} = \frac{n(n-1)}{2} \]
+
+    But for $n = 2,3$ the number of extreme rays coincide \\
+    with the number of split metrics and also
+    \begin{align*}
+        n = 2, &\qquad 2^{2-1} - 1 = 1 = \binom{2}{2} \\[5pt]
+        n = 3, &\qquad 2^{3-1} - 1 = 3 = \binom{3}{2}
+    \end{align*}
+\end{remark}
+
+\end{document}

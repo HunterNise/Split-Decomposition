@@ -1,0 +1,25 @@
+\documentclass[./main.tex]{subfiles}
+\begin{document}
+\ifSubfilesClassLoaded{\mainmatter\appendix}{}
+
+\chapter{Matlab implementation} \label{appx:a1}
+
+\subsection*{$\beta$ index}
+\inputminted{matlab}{code/beta.m}
+\clearpage
+
+\subsection*{$\alpha$ index}
+\inputminted{matlab}{code/alfa.m}
+\clearpage
+
+\subsection*{Split decomposition}
+\inputminted{matlab}{code/split_decomp.m}
+\clearpage
+
+\inputminted{matlab}{code/split_metric.m}
+\vspace{2\baselineskip}
+\inputminted{matlab}{code/alfa_sx.m}
+\clearpage
+\inputminted{matlab}{code/alfa_dx.m}
+
+\end{document}

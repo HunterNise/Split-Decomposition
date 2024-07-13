@@ -1,0 +1,393 @@
+\documentclass[./main.tex]{subfiles}
+\begin{document}
+\ifSubfilesClassLoaded{\mainmatter}{}
+
+\chapter{Split decomposition algorithm} \label{chap:p3c2}
+
+We now pass to examine in more detail the algorithm to compute the split decomposition, based on what has been outlined in \autoref{chap:p2c3}.
+
+I also provide an implementation in Matlab; \\
+\bsp the full code can be found in \autoref{appx:a1}.
+
+
+\subsection*{Data structures}
+
+Given some ordering of $X$, we identify $X$ with $\{ 1, \dots, n \}$, where $n = \card{X}$.
+
+The obvious way to represent a symmetric function $\, d : \XX \to \R \,$ \\ \bsp is with a symmetric square matrix $\, D \in M(n,\R) \,$ such that
+\[ D_{ij} = d(i,j) \,, \quad \forall\,i,j \in X \]
+
+It is less obvious how to represent splits.
+
+One way would be storing the indices of the elements contained in each part. \\
+This method has some issues: we need to store in memory data relative to \emph{two} sets for each split; or we could store the elements of only one of the part, but it may not be easy to pass to the complement.
+
+An alternative is to identify each split with one of its part (and get the other part as the complement), but for each element we annotate whether they belong or not to the part considered.
+
+Thus we can represent a split with a binary array, where $1$ in position $i$ \\
+\bsp means that $i$ belongs to the part and $0$ means it belongs to the complement: \\[1pt]
+for example $[1\ 0\ 1\ 0\ 0]$ would represent the split $\bigl\{ \{1,3\},\{2,4,5\} \bigr\}$ as encoded by its first part $\{1,3\}$; while the binary complement $[0\ 1\ 0\ 1\ 1]$ represents the \emph{same} split, but by encoding the other part $\{2,4,5\}$.
+
+Notice that what we have done is a bit of a trick: we are still using two piece of information to represents the split, namely one of the part and the length of the array (that is the total number of elements). \\
+In fact, with this method we cannot represent a generic \emph{partial} split, \\
+since we would not know on which subset of $X$ it is defined \\
+(or in other words what is the union of the parts).
+
+However this is not a problem since, as we will see, there is no need to represent all partial splits, but only those obtained by iteratively adding elements to a base split.\bigskip
+
+We will use as ordering for adding the elements the same ordering used for $X$: \\[1pt]
+that is  $\bigl\{ \{1\},\{2\} \bigr\}$ is the base split, \\
+\bsp and we will consider only subsets of the form $\{ 1, \dots, m \} \subseteq \{ 1, \dots, n \}$. \\
+In particular, in this context an array of length $m < n$ \\
+\bsp will represent a split of the subset $\{ 1, \dots, m \}$.\bigskip\bigskip
+
+In order to avoid unnecessary technical details for the moment, \\
+we will think of splits as sets of indices in the pseudo-code \\
+and use the binary array representation in the final implementation.
+
+For ease of notation we use $\, A \mathbin{|} B \,$ for the split $\bigl\{ A, B \bigr\}$ \\[1pt]
+\bsp and $\, A \cup x \,$ for $\, A \cup \{x\} \,$.\bigskip
+
+\clearpage
+
+
+\subsection*{The $\beta$ index}
+
+The formula for the $\beta$ index relative to the quartet $\, t,u \mathbin{|} v,w \,$ is
+\[ \beta_{\, t,u \,\mathbin{|}\, v,w} = \frac{1}{2}\, \Bigl( \max {\{ tu + vw,\, tv + uw,\, tw + uv \}} - tu - vw \Bigr) \]
+
+This is straightforward enough, but we can make a small improvement to avoid unnecessary numerical cancellation: if
+\[ \max {\{ tu + vw,\, tv + uw,\, tw + uv \}} = tu + vw \]
+then we do not need to do the subtraction, \\
+\bsp because we already know the result is $0$.\bigskip
+
+\begin{algorithm}
+\caption{$\beta$ index}
+\begin{algorithmic}[1]\setstretch{1.1}
+    \Function{beta}{$t,u,v,w$}
+        \State $s_1 \gets D(t,u) + D(v,w)$
+        \State $s_2 \gets D(t,v) + D(u,w)$
+        \State $s_3 \gets D(t,w) + D(u,v)$
+        \State $m \gets \Call{max}{s_1, s_2, s_3}$
+        \If {$m = s_1$}
+            \State $b \gets 0$
+        \Else
+            \State $b \gets \frac{1}{2}\, (m - s_1)$
+        \EndIf
+        \State \Return $b$
+    \EndFunction
+\end{algorithmic}
+\end{algorithm}
+
+\clearpage
+
+
+\subsection*{The $\alpha$ index}
+
+The formula for the $\alpha$ index relative to the split $A \mathbin{|} B$ is
+\[ \alpha_{A \,\mathbin{|}\, B} \,\defeq\, \min_{\substack{t,\,u \,\in\, A \\ v,w \,\in\, B}}{\beta_{\, t,u \,\mathbin{|}\, v,w}} \]
+
+We can exploit the following symmetries of the $\beta$ index
+\[ \beta_{\, t,u \,\mathbin{|}\, v,w} = \beta_{\, u,t \,\mathbin{|}\, v,w} = \beta_{\, t,u \,\mathbin{|}\, w,v} = \beta_{\, u,t \,\mathbin{|}\, w,v} \,, \quad \forall\, t,u,v,w \in X \]
+to skip about $\sfrac{3}{4}$ of quartets. \\[3pt]
+To do so we need to compute the $\beta$ index over all \underline{unordered} pairs. \\[3pt]
+We use the notation $\binom{S}{2}$ for the set of unordered pairs of $S$.
+
+Moreover, if just one of the $\beta$ index is $0$, \\
+\bsp then we do not need to check further since also the $\alpha$ index would be $0$.\bigskip
+
+\begin{algorithm}
+\caption{$\alpha$ index}
+\begin{algorithmic}[1]\setstretch{1.1}
+    \Function{alpha}{$A \mathbin{|} B$}
+        \State $a \gets \infty$ \Comment{initialize for the first min}
+        \ForAll {$\{t,u\} \in \binom{A}{2}$} \Comment{cycle on unordered pairs of $A$}
+            \ForAll {$\{v,w\} \in \binom{B}{2}$} \Comment{cycle on unordered pairs of $B$}
+                \State $b \gets \Call{beta}{t,u,v,w}$
+                \If {$b = 0$}
+                    \State $a \gets 0$
+                    \State \Return $a$
+                \Else
+                    \State $a \gets \Call{min}{a,b}$
+                \EndIf
+            \EndFor
+        \EndFor
+        \State \Return $a$
+    \EndFunction
+\end{algorithmic}
+\end{algorithm}
+
+\clearpage
+
+
+\subsection*{The $d$-splits}
+
+The algorithm is of inductive nature
+\begin{itemize}
+    \item start with $\, Y = \{y,y^\prime\} \,$ where $\, y \neq y^\prime \in X \,$
+    \item until $\, Y = X \,$
+        \begin{itemize}
+            \item pick any $\, x \in X \setminus Y \,$
+            \item for every $\, A \mathbin{|} B \,$ $d$-split of $Y$,
+                \begin{itemize}
+                    \item check if $\, A \cup x \mathbin{|} B \,$ is a partial $d$-split
+                    \item check if $\, A \mathbin{|} B \cup x \,$ is a partial $d$-split
+                \end{itemize}
+            \item check if $\, Y \mathbin{|} x \,$ is a partial $d$-split
+            \item update $Y$ to $\, Y \cup x \,$
+        \end{itemize}
+\end{itemize}\medskip
+
+We need to specify what to do after these checks and how to choose $x$. \\
+Since we have an ordering, we can just cycle on all the elements \\
+\bsp (we use $k$ to emphasize this choice).\bigskip
+
+\begin{algorithm}
+\caption{$d$-splits}
+\begin{algorithmic}[1]\setstretch{1.2}
+    \Function{dsplit}{}
+        \State $Y \gets \{1,2\},\ \ L_\text{old} \gets 1 \mathbin{|} 2,\ \ L_\text{new} \gets \emptyset$
+        \For {$k \gets 3 \To n$}
+            \ForAll {$\, A \mathbin{|} B \in L_\text{old} \,$} \Comment{current $d$-splits of $Y$}
+                \If {$\, \Call{alpha}{A \cup k \mathbin{|} B} > 0 \,$}
+                    \State $\Call{insert}{L_\text{new},\, A \cup k \mathbin{|} B}$
+                \EndIf
+                \If {$\, \Call{alpha}{A \mathbin{|} B \cup k} > 0 \,$}
+                    \State $\Call{insert}{L_\text{new},\, A \mathbin{|} B \cup k}$
+                \EndIf
+                \State $\Call{delete}{L_\text{old},\, A \mathbin{|} B}$
+            \EndFor
+            \If {$\, \Call{alpha}{\,Y \mathbin{|} k} > 0 \,$}
+                \State $\Call{insert}{L_\text{new},\, Y \mathbin{|} k}$
+            \EndIf
+            \State $Y \gets Y \cup k,\ \ L_\text{old} \gets L_\text{new},\ \ L_\text{new} \gets \emptyset$
+        \EndFor
+        \State \Return $L_\text{old}$
+    \EndFunction
+\end{algorithmic}
+\end{algorithm}
+
+\clearpage
+
+This algorithm, as is written, has some inefficiencies: \\
+\bsp when we compute the isolation index of $\, A \cup k \mathbin{|} B \,$ or $\, A \mathbin{|} B \cup k \,$, \\
+\bsp we are calling the function $\textsc{alpha}$ that recalculate over all quartets. \\
+But if we store the value of $\alpha_{A \,\mathbin{|}\, B}$ previously computed, \\
+\bsp we only need to check the quartets that contain $k$.
+
+So we can substitute the call to $\textsc{alpha}$ in line 5 with a function $\textsc{alpha\_sx}$ \\
+defined as\bigskip
+
+\begin{algorithm}
+\caption{$\alpha$ index}
+\begin{algorithmic}[1]\setstretch{1.1}
+    \Function{alpha\_sx}{$A \cup \{k\} \mathbin{|} B,\, \alpha_{A \,\mathbin{|}\, B}$}
+        \State $a \gets \alpha_{A \,\mathbin{|}\, B}$ \Comment{initialize with the old value}
+        \ForAll {$t \in A \cup \{k\}$} \Comment{cycle only on one element}
+            \ForAll {$\{v,w\} \in \binom{B}{2}$}
+                \State $b \gets \Call{beta}{t,k,v,w}$ \Comment{quartet $\, t,k \mathbin{|} v,w$}
+                \If {$b = 0$}
+                    \State $a \gets 0$
+                    \State \Return $a$
+                \Else
+                    \State $a \gets \Call{min}{a,b}$
+                \EndIf
+            \EndFor
+        \EndFor
+        \State \Return $a$
+    \EndFunction
+\end{algorithmic}
+\end{algorithm}\medskip
+
+and the call to $\textsc{alpha}$ in line 8 with a similar function $\textsc{alpha\_dx}$ \\
+with the loops swapped\bigskip
+
+\hspace*{1cm}
+\begin{minipage}{\dimexpr\linewidth-1.1cm}
+\begin{algorithmic}\noEnd\noIndLines\setstretch{1.1}
+        \ForAll {$\{t,u\} \in \binom{A}{2}$}
+            \ForAll {$v \in B \cup \{k\}$} \Comment{cycle only on one element}
+                \State $b \gets \Call{beta}{t,u,v,k}$ \Comment{quartet $\, t,u \mathbin{|} v,k$}
+            \EndFor
+        \EndFor
+\end{algorithmic}
+\end{minipage}\bigskip\bigskip
+
+Notice that for the partial splits of the form $\, Y \mathbin{|} k \,$, \\
+\bsp all the quartets contain $k$, so they are all \squote{new}.
+
+\clearpage
+
+
+\subsection*{The decomposition}
+
+If we store the isolation indices computed during the execution of \textsc{dsplit}, \\
+we can also compute the split-prime residue of $D$.\medskip
+
+\begin{algorithm}
+\caption{split-prime residue}
+\begin{algorithmic}[1]\setstretch{1.1}
+    \Function{residue}{$\Sc_d(X),\{\alpha_S\}_{S \,\in\, \Sc_d(X)}$}
+        \State $D_0 \gets D$
+        \ForAll {$S \in \Sc_d(X)$}
+            \State $D_0 \gets D_0 - \alpha_S \cdot \Delta_S$
+        \EndFor
+        \State \Return $D_0$
+    \EndFunction
+\end{algorithmic}
+\end{algorithm}\bigskip\medskip
+
+Here $\Delta_S$ is the matrix representing the split metric associated to the split $S$.
+
+In the representation of splits as sets of indices, the calculation of $\Delta_S$ requires, for every couple $i,j \in X$, to cycle over one of the part and check whether $i,j$ are both present/absent; if this is true we assign value $0$, otherwise value $1$. \\
+This, on average, has computational cost
+\[ \underbrace{\frac{n}{2}}_{\substack{\text{$\#$ of elements} \\ \text{in one part}}} \!\!\times\ \ \underbrace{\frac{n(n-1)}{2}}_{\substack{\text{$\#$ of unique} \\ \text{elements of $\Delta_S$}}} = O(n^3) \]
+even accounting for the symmetry of the matrix.
+
+But in the representation as binary arrays we just need an \textbf{xor} \\
+(we use the notation $[A]$ to emphasize that here $A$ is an array).\medskip
+
+\begin{algorithm}
+\caption{split metric}
+\begin{algorithmic}[1]\setstretch{1.1}
+    \Function{split\_metric}{$[A]$}
+        \ForAll {$i \in [A]$}
+            \ForAll {$j \in [A]$}
+                \State $\Delta_A(i,j) \gets i \textbf{ xor } j$
+            \EndFor
+        \EndFor
+    \EndFunction
+\end{algorithmic}
+\end{algorithm}\medskip
+
+This has cost of only $O(n^2)$.
+
+\clearpage
+
+The final algorithm looks like this\medskip
+
+\begin{algorithm}
+\caption{split decomposition}
+\begin{algorithmic}[1]\setstretch{1.2}
+    \Function{split\_decomp}{}
+        \State $Y \gets \{1,2\},\ \ L_\text{old} \gets \bigl[\, 1 \mathbin{|} 2 \,,\, \Call{alpha}{1 \mathbin{|} 2} \,\bigr],\ \ L_\text{new} \gets \emptyset$
+        \For {$k \gets 3 \To n$}
+            \ForAll {$\, \bigl[\, A \mathbin{|} B \,,\, \alpha_{A \,\mathbin{|}\, B} \,\bigr] \in L_\text{old} \,$}
+                \State $a \gets \Call{alpha\_sx}{A \cup k \mathbin{|} B,\, \alpha_{A \,\mathbin{|}\, B}}$
+                \If {$\, a > 0 \,$}
+                    \State $\Call{insert}{L_\text{new},\, \bigl[\, A \cup k \mathbin{|} B \,,\, a \,\bigr]}$
+                \EndIf
+                \State $a \gets \Call{alpha\_dx}{A \mathbin{|} B \cup k,\, \alpha_{A \,\mathbin{|}\, B}}$
+                \If {$\, a > 0 \,$}
+                    \State $\Call{insert}{L_\text{new},\, \bigl[\, A \mathbin{|} B \cup k \,,\, a \,\bigr]}$
+                \EndIf
+                \State $\Call{delete}{L_\text{old},\, \bigl[\, A \mathbin{|} B \,,\, \alpha_{A \,\mathbin{|}\, B} \,\bigr]}$
+            \EndFor
+            \State $a \gets \Call{alpha}{\,Y \mathbin{|} k}$
+            \If {$\, a > 0 \,$}
+                \State $\Call{insert}{L_\text{new},\, \bigl[\, Y \mathbin{|} k \,,\, a \,\bigr]}$
+            \EndIf
+            \State $Y \gets Y \cup k,\ \ L_\text{old} \gets L_\text{new},\ \ L_\text{new} \gets \emptyset$
+        \EndFor
+        \State $D_0 \gets D$
+        \ForAll {$\, \bigl[\, A \mathbin{|} B \,,\, \alpha_{A \,\mathbin{|}\, B} \,\bigr] \in L_\text{old} \,$}
+            \State $D_0 \gets D_0 - \alpha_{A \,\mathbin{|}\, B} \cdot \Delta_{A \,\mathbin{|}\, B}$
+        \EndFor
+        \State \Return $L_\text{old},\, D_0$
+    \EndFunction
+\end{algorithmic}
+\end{algorithm}
+
+\clearpage
+
+
+\subsection*{Correctness}
+
+We claim that at the end of each iteration of the outer loop, the list $L_\text{old}$ contains all the $d$-splits of $\, Y \cup k \,$. We prove it by induction on $k$.\bigskip
+
+For the base case, before entering the outer loop, \\
+\bsp we are adding the only possible $d$-split of $\{1,2\}$, which is $\, 1 \mathbin{|} 2 \,$.\bigskip
+
+For each $\, A \mathbin{|} B \,$ $d$-split of $Y$, \\
+\bsp it is clear that $\, A \cup k \mathbin{|} B \,$, $\, A \mathbin{|} B \cup k \,$ and $\, Y \mathbin{|} k \,$ are splits of $\, Y \cup k \ $; \\
+and we are adding to the list only those that have non-zero isolation index.
+
+This proves that at the end those in the list are indeed $d$-splits of $\, Y \cup k \,$.\bigskip
+
+Now suppose $S$ is a $d$-split of $\, Y \cup k \,$.
+
+If $\, S = Y \mathbin{|} k \,$, then we know that it will be added from what said above.
+
+Otherwise $S$ is an extension of a $d$-split of $Y$. \\
+In fact, the restriction of $S$ to $Y$ is a split of $Y$, because neither of its parts can contain $Y$; otherwise $S$ should be $\, Y \mathbin{|} k \,$, which we excluded, or $\, Y \cup k \mathbin{|} \emptyset \,$, which is not a split. Moreover, the isolation index of the restriction cannot be $0$, because otherwise also its extension $S$ should have index $0$, which contradicts the hypothesis that $S$ is a $d$-split.
+
+This proves that every $d$-split of $\, Y \cup k \,$, different from $\, Y \mathbin{|} k \,$, is an extension of a $d$-split of $Y$, which for inductive hypothesis is already in the old list; and is necessarily obtained by adding $k$ to one of the part, so it is among those computed by the algorithm.
+
+\clearpage
+
+
+\subsection*{Computational complexity}
+
+Consider $Y$ of cardinality $m$ and let us count the quartets that contain $k$.\bigskip
+
+In $\, Y \mathbin{|} k \,$, we have two choices for the elements in $Y$, \\
+\bsp but we want only the unordered pairs, so there are
+\[ \frac{m \cdot m - m}{2} + m = \frac{m\,(m + 1)}{2} \eqspace{0pt}{\medskipamount} \]
+
+Now suppose to have a split $\, A \mathbin{|} B \,$ such that
+\[ \card{A} = l \quad \text{and} \quad \card{B} = m - l \]
+
+Then in $\, A \cup k \mathbin{|} B \,$ we have one choice for the elements of $A$ \\
+\bsp and two choices for the elements of $B$ (still only unordered pairs), so
+\[ l \cdot \frac{(m - l)(m - l + 1)}{2} \]
+
+Analogously in $\, A \mathbin{|} B \cup k \,$, we have two choices for the elements of $A$ \\
+\bsp  (still only unordered pairs) and one choice for the elements of $B$, so
+\[ \frac{l\,(l + 1)}{2} \cdot (m - l) \]
+
+In total from the split $\, A \mathbin{|} B \,$ we have
+\begin{align*}
+    \frac{1}{2}\, l\,(m - l) \bigl[ (m \ -\! \not{l} + 1) \ +\! \not{l} + 1 \bigr]& \\
+    = \frac{1}{2}\, l\,(m - l)(m + 2)& \eqdef f_m(l)
+\end{align*}
+
+\begin{align*}
+    \frac{\partial}{\partial l} f_m(l) &= \frac{1}{2}\, (m - l)(m + 2) - \frac{1}{2}\, l\,(m + 2) \\
+    &= \frac{1}{2}\, \bigl[ (m - l) - l \bigr] (m + 2) \\
+    &= \frac{1}{2}\, (m - 2\,l)(m + 2)
+\end{align*}
+
+\[ \frac{\partial}{\partial l} f_m(l) = 0 \quad \iff \quad l = \frac{m}{2} \]
+
+\begin{align*}
+    \max_{l} {f_m(l)} &= \frac{1}{2}\, \frac{m}{2}\, \Bigl( m - \frac{m}{2} \Bigr) (m + 2) \\
+    &= \frac{1}{2}\, \frac{m}{2}\, \frac{m}{2}\, (m + 2) \\
+    &= \frac{m^3}{8} + \frac{m^2}{4}
+\end{align*}
+
+So we found an upperbound for the number of quartets \\
+\bsp that depends only on the cardinality of $Y$.
+
+Since there can be at most $\binom{m}{2}$ $d$-splits on $Y$, \\[1pt]
+\bsp the number of \squote{new} $\beta$ indices we need to compute is at most
+\[ \frac{m\,(m + 1)}{2} + \Bigl( \frac{m^3}{8} + \frac{m^2}{4} \Bigr) \cdot \binom{m}{2} \]
+
+For each of these quartets, we need to do: $2$ comparisons (for the maximum in the $\beta$ index), $3$ additions, $1$ subtraction and $1$ other comparison (against the current minimum). \\
+Moreover, for each split we need to make $1$ further comparison, \\
+\bsp to check if the isolation index is non-zero.
+
+In total the number of operations is at most
+\begin{align*}
+&(6 + 1) \biggl[ \frac{m\,(m + 1)}{2} + \Bigl( \frac{m^3}{8} + \frac{m^2}{4} \Bigr) \cdot \frac{m\,(m - 1)}{2} \biggr] + \biggl( 1 + \frac{m\,(m - 1)}{2} \biggr) \\
+&= \frac{1}{16}\, \bigl( 7\,m^5 + 7\,m^4 - 14\,m^3 + 64\,m^2 + 48\,m + 16 \bigr)
+\end{align*}
+
+Summing over all the $Y$'s of the outer loop, we get
+\[ \sum_{m \,=\, 2}^{n - 1} \ldots = \frac{7}{96}\,n^6 - \frac{21}{160}\,n^5 - \frac{49}{192}\,n^4 + \frac{23}{12}\,n^3 - \frac{145}{192}\,n^2 + \frac{73}{480}\,n - 9 \]
+
+Notice how the upperbound on the total number of arithmetic operations \\
+\bsp is a polynomial of grade $6$ with somewhat small coefficients.
+
+In particular, the total complexity of the algorithm is $O(n^6)$.
+
+\end{document}
