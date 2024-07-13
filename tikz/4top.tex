@@ -1,0 +1,107 @@
+\documentclass{standalone}
+\usepackage{tikz}
+\usetikzlibrary{calc}
+
+\newcommand*{\LT}{u}
+\newcommand*{\LB}{x}
+\newcommand*{\RT}{y}
+\newcommand*{\RB}{v}
+
+\begin{document}
+\begin{tikzpicture}[scale=1.5, every node/.style={scale=1.5}]
+
+\useasboundingbox (-7,-6) rectangle (8.5,2);
+%\draw[help lines] (-5,-5) grid (5,5);
+
+% First column
+\begin{scope}[xshift=-5cm]
+    \begin{scope}
+        % Light gray lines
+        \draw[lightgray, very thick] (-1,1)  -- (-1,-1);
+        \draw[lightgray, very thick] (2.5,1) -- (2.5,-1);
+        % Nodes labels
+        \node[above]  at (-1,1)    {$\LT$};
+        \node[below]  at (-1,-1)   {$\LB$};
+        \node[above]  at (2.5,1)   {$\RT$};
+        \node[below]  at (2.5,-1)  {$\RB$};
+        % Edges labels
+        \node[above, rotate=-90]  at (-0.9,0)     {$d(\LT,\LB)$};
+        \node[below, rotate=-90]  at (2.4,0)      {$d(\RT,\RB)$};
+        \node[below]              at (0.75,-1.5)  {$d(\LT,\LB) \,+\, d(\RT,\RB)$};
+    \end{scope}
+  
+    \begin{scope}[yshift=-4.25cm]
+        % Black lines
+        \draw[black, very thick] (-1,1)  -- (0,0)   -- (-1,-1);
+        \draw[black, very thick] (0,0)   -- (1.5,0);
+        \draw[black, very thick] (2.5,1) -- (1.5,0) -- (2.5,-1);
+        % Nodes labels
+        \node[left]   at (-1,1.1)    {$\LT$};
+        \node[left]   at (-1,-1.1)   {$\LB$};
+        \node[right]  at (2.5,1.1)   {$\RT$};
+        \node[right]  at (2.5,-1.1)  {$\RB$};
+    \end{scope}
+\end{scope}
+
+% Second column
+\begin{scope}
+    \begin{scope}
+        % Light gray lines
+        \draw[lightgray, very thick] (-1,1)  -- (2.5,1);
+        \draw[lightgray, very thick] (-1,-1) -- (2.5,-1);
+        % Nodes labels
+        \node[left]   at (-1,1)    {$\LT$};
+        \node[left]   at (-1,-1)   {$\LB$};
+        \node[right]  at (2.5,1)   {$\RT$};
+        \node[right]  at (2.5,-1)  {$\RB$};
+        % Edges labels
+        \node[above]  at (0.75,0.25)   {$d(\LT,\RT)$};
+        \node[below]  at (0.75,-0.35)  {$d(\LB,\RB)$};
+        \node[below]  at (0.75,-1.5)   {$d(\LT,\RT) \,+\, d(\LB,\RB)$};
+    \end{scope}
+    
+    \begin{scope}[yshift=-4.25cm]
+        % Black lines
+        \draw[black, very thick] (-1,1)     -- (0.75,0.5)  -- (2.5,1);
+        \draw[black, very thick] (0.75,0.5) -- (0.75,-0.5);
+        \draw[black, very thick] (-1,-1)    -- (0.75,-0.5) -- (2.5,-1);
+        % Nodes labels
+        \node[left]   at (-1,1.05)    {$\LT$};
+        \node[left]   at (-1,-1.05)   {$\LB$};
+        \node[right]  at (2.5,1.05)   {$\RT$};
+        \node[right]  at (2.5,-1.05)  {$\RB$};
+    \end{scope}
+\end{scope}
+
+% Third column
+\begin{scope}[xshift=5cm]
+    \begin{scope}
+        % Light gray lines
+        \draw[lightgray, very thick] (-1,1)  -- (2.5,-1);
+        \draw[lightgray, very thick] (2.5,1) -- (-1,-1);
+        % Nodes labels
+        \node[left]   at (-1,1.1)    {$\LT$};
+        \node[left]   at (-1,-1.1)   {$\LB$};
+        \node[right]  at (2.5,1.1)   {$\RT$};
+        \node[right]  at (2.5,-1.1)  {$\RB$};
+        % Edges labels
+        \node[above, rotate=30]   at (-0.3,-0.6)  {$d(\LB,\RT)$};
+        \node[above, rotate=-30]  at (-0.3,0.65)  {$d(\LT,\RB)$};
+        \node[below]              at (0.75,-1.5)  {$d(\LT,\RB) \,+\, d(\LB,\RT)$};
+    \end{scope}
+    
+    \begin{scope}[xshift=0.75cm, yshift=-4.15cm]
+        % Black lines
+        \draw[black, very thick] (-2,-1)  -- (-1.4,0) -- (-0.8,-1);
+        \draw[black, very thick] (-1.4,0) -- (0,1)    -- (1.4,0);
+        \draw[black, very thick] (0.8,-1) -- (1.4,0)  -- (2,-1);
+        % Nodes labels
+        \node[below]  at (-2,-1)    {$\LT$};
+        \node[below]  at (-0.8,-1)  {$\RB$};
+        \node[below]  at (0.8,-1)   {$\LB$};
+        \node[below]  at (2,-1)     {$\RT$};
+    \end{scope}
+\end{scope}
+
+\end{tikzpicture}
+\end{document}
